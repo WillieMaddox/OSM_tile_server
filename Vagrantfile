@@ -25,9 +25,9 @@ Vagrant.configure(2) do |config|
       vb.memory = 32768
     end
 
-    #osm.vm.provision :shell, :path => "install.sh"
+    osm.vm.provision :shell, :path => "install.sh"
     osm.vm.provision :shell, :path => "setup.sh"
-    #osm.vm.provision :shell, :path => "setup2.sh"
-    #osm.vm.provision :shell, :path => "setup3.sh"
+    osm.vm.provision :shell, :path => "setup2.sh"
+    osm.vm.provision :shell, :path => "setup3.sh"
   end
 end
