@@ -39,11 +39,11 @@ echo '##############################'
 echo '##### Stylesheet config ######'
 echo '##############################'
 
-
-if [[ ! -d /vagrant/data ]]; then
-  mkdir -p /vagrant/data
+ZIPSDIR=/vagrant/data/zips/
+if [[ ! -d ${ZIPSDIR} ]]; then
+  mkdir -p ${ZIPSDIR}
 fi
-cd /vagrant/data/
+cd ${ZIPSDIR}
 
 # Download OSM bright
 
@@ -72,7 +72,7 @@ su - ${GISUSER}
 cd ${STYLEDIR}
 
 if [[ ! -d osm-bright-master ]]; then
-  unzip /vagrant/data/zips/osm-bright-master.zip
+  unzip ${ZIPSDIR}osm-bright-master.zip
 fi
 
 if [[ ! -d osm-bright-master/shp ]]; then
@@ -82,15 +82,15 @@ fi
 cd osm-bright-master/shp
 
 if [[ ! -f simplified-land-polygons-complete-3857/simplified-land-polygons.shp ]]; then
-  unzip /vagrant/data/zips/simplified-land-polygons-complete-3857.zip
+  unzip ${ZIPSDIR}simplified-land-polygons-complete-3857.zip
 fi
 
 if [[ ! -f land-polygons-split-3857/land-polygons.shp ]]; then
-  unzip /vagrant/data/zips/land-polygons-split-3857.zip
+  unzip ${ZIPSDIR}land-polygons-split-3857.zip
 fi
 
 if [[ ! -f ne_10m_populated_places_simple/ne_10m_populated_places_simple.shp ]]; then
-  unzip -d ne_10m_populated_places_simple /vagrant/data/zips/ne_10m_populated_places_simple.zip
+  unzip -d ne_10m_populated_places_simple ${ZIPSDIR}ne_10m_populated_places_simple.zip
 fi
 
 if [[ ! -f land-polygons-split-3857/land-polygons.index ]]; then
