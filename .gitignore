@@ -1,0 +1,4 @@
+data/zips/*
+data/planet/*
+.vagrant
+.bundle
