@@ -69,10 +69,9 @@ if [[ ! -d /var/run/renderd ]]; then
     mkdir /var/run/renderd
 fi
 chown ${GISUSER} /var/run/renderd
-su - ${GISUSER}
 
 echo '##############################'
 echo '##### OSM Bright config 2 ####'
 echo '##############################'
 
-renderd -f -c /usr/local/etc/renderd.conf
+renderd -u ${GISUSER} -f -c /usr/local/etc/renderd.conf
