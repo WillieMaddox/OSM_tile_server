@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export DEBIAN_FRONTEND=noninteractive
+
 if [[ ! -d ~/src ]]; then
   mkdir ~/src
 fi
@@ -17,8 +19,12 @@ if [[ ! -d build ]]; then
 fi
 cd build
 cmake ..
-make -j 4
-make install
+make -j 8
+sudo make install
+#cd ../
+#sudo cp install-postgis-osm-user.sh /usr/bin/
+#sudo cp install-postgis-osm-db.sh /usr/bin/
+
 
 cd ~/src
 if [ -e mapnik ]; then 
@@ -32,9 +38,9 @@ git submodule update --init
 git branch 2.2 origin/2.2.x
 git checkout 2.2
 python scons/scons.py configure INPUT_PLUGINS=all OPTIMIZATION=3 SYSTEM_FONTS=/usr/share/fonts/truetype/
-make -j 4
-make install
-ldconfig
+make -j 8
+sudo make install
+sudo ldconfig
 
 
 cd ~/src
@@ -47,7 +53,19 @@ else
 fi
 ./autogen.sh
 ./configure
-make -j 4
-make install
-make install-mod_tile
-ldconfig
+make -j 8
+sudo make install
+sudo make install-mod_tile
+sudo ldconfig
+#cd ../
+#sudo cp openstreetmap-tiles-update-expire /usr/bin/
+
+cd ~/src
+if [ -e osmosis ]; then 
+  cd osmosis
+  git pull
+else
+  git clone https://github.com/openstreetmap/osmosis.git
+  cd osmosis
+fi
+./gradlew assemble

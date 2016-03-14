@@ -18,7 +18,8 @@ apt-get install -qy \
   libxml2-dev libfreetype6-dev libpng12-dev libtiff4-dev libagg-dev libgeotiff-epsg \
   libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev gdal-bin python-gdal \
   apache2 apache2-dev apache2-utils apache2-dbg \
-  liblua5.2-dev lua5.1 liblua5.1-dev ttf-unifont node-carto
+  liblua5.2-dev lua5.1 liblua5.1-dev ttf-unifont node-carto \
+  openjdk-7-source junit
 
 echo '127.0.0.1 localhost gis.local.osm' | cat - /etc/hosts > /tmp/out && mv /tmp/out /etc/hosts
 echo "ServerName gis.local.osm" > /etc/apache2/conf-available/local-servername.conf

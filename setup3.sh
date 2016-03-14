@@ -44,12 +44,14 @@ echo 'kernel.shmmax=268435456' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/ou
 service postgresql restart
 
 #PLANETDIR="/usr/local/share/maps/planet"
-#URLBASE="http://planet.openstreetmap.org/pbf/"
-#PBFFILE="planet-latest.osm.pbf"
-
 PLANETDIR="/vagrant/data/planet/"
-URLBASE="http://download.geofabrik.de/north-america/us/"
-PBFFILE="alabama-latest.osm.pbf"
+
+#URLBASE="http://download.geofabrik.de/north-america/us/"
+#PBFFILE="alabama-latest.osm.pbf"
+
+URLBASE="http://planet.openstreetmap.org/pbf/"
+PBFFILE="planet-latest.osm.pbf"
+
 PLANETFILE=${PLANETDIR}${PBFFILE}
 URLFILE=${URLBASE}${PBFFILE}
 
@@ -63,15 +65,15 @@ if [[ ! -f ${PLANETFILE} ]]; then
     wget ${URLFILE} -O ${PLANETFILE}
 fi
 
-osm2pgsql --slim -d ${DB} -U ${GISUSER} -C 16000 --number-processes 4 ${PLANETFILE}
+# osm2pgsql -c -d gis -U ${GISUSER} --slim -C 24000 -k --flat-nodes /var/lib/mod_tile/planet.cache --number-processes 4  ${PLANETFILE}
 
-if [[ ! -d /var/run/renderd ]]; then
-    mkdir /var/run/renderd
-fi
-chown ${GISUSER} /var/run/renderd
+# if [[ ! -d /var/run/renderd ]]; then
+#     mkdir /var/run/renderd
+# fi
+# chown ${GISUSER} /var/run/renderd
 
-echo '##############################'
-echo '##### OSM Bright config 2 ####'
-echo '##############################'
+# echo '##############################'
+# echo '##### OSM Bright config 2 ####'
+# echo '##############################'
 
-renderd -u ${GISUSER} -f -c /usr/local/etc/renderd.conf
+# renderd -f -c /usr/local/etc/renderd.conf
