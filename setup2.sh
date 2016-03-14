@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-USER=vagrant
-PASS=vagrant
+GISUSER=vagrant
+GISPASS=vagrant
 DB=gis
 
 echo '##############################'
@@ -10,27 +10,29 @@ echo '##############################'
 
 # Need to figure out how to make this work.
 # Adding the password flag -p when creating the user is not secure.
-#sudo useradd -m ${USER}
-#sudo passwd ${USER} < ${PASS}
-useradd -m ${USER} -p ${PASS}
+#sudo useradd -m ${GISUSER}
+#sudo passwd ${GISUSER} < ${GISPASS}
+if [[ ${GISUSER} != vagrant ]]; then
+    useradd -m ${GISUSER} -p ${GISPASS}
+fi
 
 echo '##############################'
 echo '##### Adding postgres user ###'
 echo '##############################'
 
 cat << EOF | su - postgres -c psql
-CREATE USER ${USER} WITH SUPERUSER PASSWORD '${PASS}';
+CREATE USER ${GISUSER} WITH SUPERUSER PASSWORD '${GISPASS}';
 EOF
 
 cat << EOF | su - postgres
-createdb -E UTF8 -O ${USER} ${DB}
+createdb -E UTF8 -O ${GISUSER} ${DB}
 EOF
 
 cat << EOF | su - postgres -c "psql -d ${DB}"
 CREATE EXTENSION postgis;
 CREATE EXTENSION hstore;
-ALTER TABLE geometry_columns OWNER TO ${USER};
-ALTER TABLE spatial_ref_sys OWNER TO ${USER};
+ALTER TABLE geometry_columns OWNER TO ${GISUSER};
+ALTER TABLE spatial_ref_sys OWNER TO ${GISUSER};
 EOF
 
 echo '##############################'
@@ -63,9 +65,9 @@ STYLEDIR="/usr/local/share/maps/style"
 if [[ ! -d ${STYLEDIR} ]]; then
     mkdir -p ${STYLEDIR}
 fi
-sudo chown ${USER} ${STYLEDIR}
+sudo chown ${GISUSER} ${STYLEDIR}
 
-su - ${USER}
+su - ${GISUSER}
 
 cd ${STYLEDIR}
 

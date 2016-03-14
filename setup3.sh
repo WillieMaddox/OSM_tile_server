@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-USER=vagrant
-PASS=vagrant
+GISUSER=vagrant
+GISPASS=vagrant
 DB=gis
 
 echo '##############################'
@@ -15,12 +15,12 @@ cp /vagrant/data/mods/renderd.conf /usr/local/etc/renderd.conf
 if [[ ! -d /var/run/renderd ]]; then
     mkdir /var/run/renderd
 fi
-chown ${USER} /var/run/renderd
+chown ${GISUSER} /var/run/renderd
 
 if [[ ! -d /var/lib/mod_tile ]]; then
     mkdir /var/lib/mod_tile
 fi
-chown ${USER} /var/lib/mod_tile
+chown ${GISUSER} /var/lib/mod_tile
 
 # Configure mod_tile
 
@@ -55,7 +55,7 @@ URLFILE=${URLBASE}${PBFFILE}
 
 if [[ ! -d ${PLANETDIR} ]]; then
 	mkdir ${PLANETDIR}
-	chown ${USER} ${PLANETDIR}
+	chown ${GISUSER} ${PLANETDIR}
 fi
 #cd ${PLANETDIR}
 
@@ -63,13 +63,13 @@ if [[ ! -f ${PLANETFILE} ]]; then
     wget ${URLFILE} -O ${PLANETFILE}
 fi
 
-osm2pgsql --slim -d ${DB} -U ${USER} -C 16000 --number-processes 4 ${PLANETFILE}
+osm2pgsql --slim -d ${DB} -U ${GISUSER} -C 16000 --number-processes 4 ${PLANETFILE}
 
 if [[ ! -d /var/run/renderd ]]; then
     mkdir /var/run/renderd
 fi
-chown ${USER} /var/run/renderd
-su - ${USER}
+chown ${GISUSER} /var/run/renderd
+su - ${GISUSER}
 
 echo '##############################'
 echo '##### OSM Bright config 2 ####'
