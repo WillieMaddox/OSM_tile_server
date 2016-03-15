@@ -7,7 +7,7 @@ apt-get upgrade -qy
 
 apt-get install -qy \
   vim subversion git git-core colordiff \
-  tar unzip wget bzip2 libbz2-dev\
+  tar unzip wget bzip2 libbz2-dev htop \
   build-essential autoconf binutils libtool zlib1g-dev \
   gfortran make cmake g++ libblas-dev liblapack-dev libboost-all-dev \
   libffi-dev libssl-dev libexpat1-dev \

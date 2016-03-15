@@ -21,9 +21,9 @@ cd build
 cmake ..
 make -j 8
 sudo make install
-#cd ../
-#sudo cp install-postgis-osm-user.sh /usr/bin/
-#sudo cp install-postgis-osm-db.sh /usr/bin/
+cd ../
+sudo cp install-postgis-osm-user.sh /usr/bin/
+sudo cp install-postgis-osm-db.sh /usr/bin/
 
 
 cd ~/src
@@ -57,8 +57,8 @@ make -j 8
 sudo make install
 sudo make install-mod_tile
 sudo ldconfig
-#cd ../
-#sudo cp openstreetmap-tiles-update-expire /usr/bin/
+cd ../
+sudo cp openstreetmap-tiles-update-expire /usr/bin/
 
 cd ~/src
 if [ -e osmosis ]; then 
