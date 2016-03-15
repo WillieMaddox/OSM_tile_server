@@ -42,7 +42,6 @@ make -j 8
 sudo make install
 sudo ldconfig
 
-
 cd ~/src
 if [ -e mod_tile ]; then 
   cd mod_tile

@@ -121,3 +121,32 @@ sed -i "s|\"osm\"|\"${DB}\"|" configure.py
 ./make.py
 cd ../OSMBright/
 carto project.mml > OSMBright.xml
+
+
+echo '##############################'
+echo '## Setting up your webserver #'
+echo '##############################'
+
+# Configure renderd
+
+cp /vagrant/data/mods/renderd.conf /usr/local/etc/renderd.conf
+
+if [[ ! -d /var/run/renderd ]]; then
+    mkdir /var/run/renderd
+fi
+chown ${GISUSER} /var/run/renderd
+
+if [[ ! -d /var/lib/mod_tile ]]; then
+    mkdir /var/lib/mod_tile
+fi
+chown ${GISUSER} /var/lib/mod_tile
+
+# Configure mod_tile
+
+echo "LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so" > /etc/apache2/conf-available/mod_tile.conf
+
+cp /vagrant/data/mods/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+a2enconf mod_tile
+service apache2 reload
+

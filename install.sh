@@ -28,13 +28,21 @@ service apache2 restart
 
 apt-get install -qy postgresql postgresql-contrib postgis postgresql-9.3-postgis-2.1
 
+echo '##############################'
+echo '##### Tuning your system #####'
+echo '##############################'
+
 PG_VERSION=9.3
 PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
 PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
 PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
 
+# Tuning postgresql
+
+cp /vagrant/data/mods/postgresql.conf ${PG_CONF}
+echo 'kernel.shmmax=268435456' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
 # Edit postgresql.conf to change listen address to '*':
-sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
+#sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
 sed -i "s/md5/trust/" "$PG_HBA"
 sed -i "s/peer/trust/" "$PG_HBA"
 
