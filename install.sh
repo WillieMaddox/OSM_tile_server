@@ -40,7 +40,7 @@ PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
 # Tuning postgresql
 
 cp /vagrant/data/mods/postgresql.conf ${PG_CONF}
-echo 'kernel.shmmax=268435456' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
+echo 'kernel.shmmax=1073741824' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
 # Edit postgresql.conf to change listen address to '*':
 #sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
 sed -i "s/md5/trust/" "$PG_HBA"

@@ -20,11 +20,11 @@ Vagrant.configure(2) do |config|
     #osm.vm.synced_folder "../data", "/vagrant_data"
     osm.vm.provider "virtualbox" do |vb|
       vb.cpus = 8
-      vb.memory = 32768
+      vb.memory = 32000
     end
 
-    #osm.vm.provision :shell, :path => "install.sh"
-    #osm.vm.provision :shell, :privileged => false, :path => "setup.sh"
-    #osm.vm.provision :shell, :path => "setup2.sh"
+    osm.vm.provision :shell, :path => "install.sh"
+    osm.vm.provision :shell, :privileged => false, :path => "setup.sh"
+    osm.vm.provision :shell, :path => "setup2.sh"
   end
 end
