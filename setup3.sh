@@ -11,7 +11,7 @@ PLANETDIR="/vagrant/data/planet/"
 URLBASE="http://download.geofabrik.de/north-america/us/"
 PBFFILE="alabama-latest.osm.pbf"
 ## Date:   0311_2016_1751
-## Nodes:
+## Nodes:         6849k
 ## Ways:
 ## Relations:
 
