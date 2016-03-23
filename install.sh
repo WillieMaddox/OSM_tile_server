@@ -5,9 +5,11 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get upgrade -qy
 
+apt-get install -qy htop
+
 apt-get install -qy \
   vim subversion git git-core colordiff \
-  tar unzip wget bzip2 libbz2-dev htop \
+  tar unzip wget bzip2 libbz2-dev \
   build-essential autoconf binutils libtool zlib1g-dev \
   gfortran make cmake g++ libblas-dev liblapack-dev libboost-all-dev \
   libffi-dev libssl-dev libexpat1-dev \
@@ -41,8 +43,7 @@ PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
 
 cp /vagrant/data/mods/postgresql.conf ${PG_CONF}
 echo 'kernel.shmmax=1073741824' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
-# Edit postgresql.conf to change listen address to '*':
-#sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
+sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
 sed -i "s/md5/trust/" "$PG_HBA"
 sed -i "s/peer/trust/" "$PG_HBA"
 
