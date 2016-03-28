@@ -12,8 +12,8 @@ URLBASE="http://download.geofabrik.de/north-america/us/"
 PBFFILE="alabama-latest.osm.pbf"
 ## Date:   0311_2016_1751
 ## Nodes:         6849k
-## Ways:
-## Relations:
+## Ways:           432k
+## Relations:        2490
 
 #####################################################
 #URLBASE="http://download.geofabrik.de/"
@@ -43,7 +43,9 @@ if [[ ! -f ${PLANETFILE} ]]; then
 fi
 
 # osm2pgsql -c -d gis -U ${GISUSER} --slim -C 24000 -k --flat-nodes /var/lib/mod_tile/planet.cache --number-processes 4  ${PLANETFILE}
-# time osm2pgsql -c -d gis --tablespace-index gisidx --tablespace-main-data gisdatmain --tablespace-main-index gisidxmain --tablespace-slim-data gisdatslim --tablespace-slim-index gisidxslim --slim -C 28000 --flat-nodes /var/lib/mod_tile/planet.cache --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
+--tablespace-slim-index gisidxslim --tablespace-slim-data gisdatslim
+--tablespace-main-index gisidxmain --tablespace-main-data gisdatmain
+time osm2pgsql -c -d gis --slim -C 48000 --flat-nodes /var/lib/mod_tile/planet.cache --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
 # if [[ ! -d /var/run/renderd ]]; then
 #     mkdir /var/run/renderd
 # fi

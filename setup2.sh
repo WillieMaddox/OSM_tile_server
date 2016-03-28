@@ -24,59 +24,44 @@ cat << EOF | su - postgres -c psql
 CREATE USER ${GISUSER} WITH SUPERUSER PASSWORD '${GISPASS}';
 EOF
 
-# cat << EOF | su - postgres
-# createdb -E UTF8 -O ${GISUSER} ${DB}
+# GISTBSPACE=/osm_nfs
+# GISTBSPACE=/var/lib/postgresql/9.3/main
+#
+# if [[ ! -d ${GISTBSPACE}/gisidxmain ]]; then
+#   mkdir -p ${GISTBSPACE}/gisidxmain
+# fi
+# chown postgres:postgres ${GISTBSPACE}/gisidxmain
+# cat << EOF | su - postgres -c psql
+# CREATE TABLESPACE gisidxmain OWNER ${GISUSER} LOCATION '${GISTBSPACE}/gisidxmain';
+# EOF
+#
+# if [[ ! -d ${GISTBSPACE}/gisdatmain ]]; then
+#   mkdir -p ${GISTBSPACE}/gisdatmain
+# fi
+# chown postgres:postgres ${GISTBSPACE}/gisdatmain
+# cat << EOF | su - postgres -c psql
+# CREATE TABLESPACE gisdatmain OWNER ${GISUSER} LOCATION '${GISTBSPACE}/gisdatmain';
+# EOF
+#
+# if [[ ! -d ${GISTBSPACE}/gisidxslim ]]; then
+#   mkdir -p ${GISTBSPACE}/gisidxslim
+# fi
+# chown postgres:postgres ${GISTBSPACE}/gisidxslim
+# cat << EOF | su - postgres -c psql
+# CREATE TABLESPACE gisidxslim OWNER ${GISUSER} LOCATION '${GISTBSPACE}/gisidxslim';
+# EOF
+#
+# if [[ ! -d ${GISTBSPACE}/gisdatslim ]]; then
+#   mkdir -p ${GISTBSPACE}/gisdatslim
+# fi
+# chown postgres:postgres ${GISTBSPACE}/gisdatslim
+# cat << EOF | su - postgres -c psql
+# CREATE TABLESPACE gisdatslim OWNER ${GISUSER} LOCATION '${GISTBSPACE}/gisdatslim';
 # EOF
 
-GISTBSPACE=/osm_nfs
-
-if [[ ! -d ${GISTBSPACE}/gisdata ]]; then
-  mkdir -p ${GISTBSPACE}/gisdata
-fi
 cat << EOF | su - postgres -c psql
-CREATE TABLESPACE gisdata OWNER ${GISUSER} LOCATION '${GISTBSPACE}/gisdata';
-EOF
-
-if [[ ! -d ${GISTBSPACE}/gisidx ]]; then
-  mkdir -p ${GISTBSPACE}/gisidx
-fi
-cat << EOF | su - postgres -c psql
-CREATE TABLESPACE gisidx OWNER ${GISUSER} LOCATION '${GISTBSPACE}/gisidx';
-EOF
-
-if [[ ! -d ${GISTBSPACE}/gisidxmain ]]; then
-  mkdir -p ${GISTBSPACE}/gisidxmain
-fi
-cat << EOF | su - postgres -c psql
-CREATE TABLESPACE gisidxmain OWNER ${GISUSER} LOCATION '${GISTBSPACE}/gisidxmain';
-EOF
-
-if [[ ! -d ${GISTBSPACE}/gisdatmain ]]; then
-  mkdir -p ${GISTBSPACE}/gisdatmain
-fi
-cat << EOF | su - postgres -c psql
-CREATE TABLESPACE gisdatmain OWNER ${GISUSER} LOCATION '${GISTBSPACE}/gisdatmain';
-EOF
-
-if [[ ! -d ${GISTBSPACE}/gisidxslim ]]; then
-  mkdir -p ${GISTBSPACE}/gisidxslim
-fi
-cat << EOF | su - postgres -c psql
-CREATE TABLESPACE gisidxslim OWNER ${GISUSER} LOCATION '${GISTBSPACE}/gisidxslim';
-EOF
-
-if [[ ! -d ${GISTBSPACE}/gisdatslim ]]; then
-  mkdir -p ${GISTBSPACE}/gisdatslim
-fi
-cat << EOF | su - postgres -c psql
-CREATE TABLESPACE gisdatslim OWNER ${GISUSER} LOCATION '${GISTBSPACE}/gisdatslim';
-EOF
-
-cat << EOF | su - postgres -c psql
-CREATE DATABASE ${DB} ENCODING 'UTF8' OWNER ${GISUSER} TABLESPACE gisdata;
-EOF
-
-cat << EOF | su - postgres -c "psql -d ${DB}"
+CREATE DATABASE ${DB} ENCODING 'UTF8' OWNER ${GISUSER};
+\c ${DB}
 CREATE EXTENSION postgis;
 CREATE EXTENSION hstore;
 ALTER TABLE geometry_columns OWNER TO ${GISUSER};
