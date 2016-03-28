@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define "osm" do |osm|
-    osm.vm.box = "ubuntu-trusty64-osm120"
+    osm.vm.box = "OSM-Trusty64"
     osm.vm.hostname = "osm"
     osm.vm.network "private_network", ip: "172.16.5.120"
     osm.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
@@ -42,7 +42,7 @@ Vagrant.configure(2) do |config|
 
     osm.vm.provider "virtualbox" do |vb|
       vb.cpus = 8
-      vb.memory = 64000
+      vb.memory = 32000
     end
 
 #     osm.bindfs.bind_folder "/osm_data", "/osm_nfs",

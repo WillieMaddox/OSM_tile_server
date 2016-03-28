@@ -56,3 +56,9 @@ time osm2pgsql -c -d gis --slim -C 48000 --flat-nodes /var/lib/mod_tile/planet.c
 # echo '##############################'
 
 # renderd -f -c /usr/local/etc/renderd.conf
+
+# Then restart apache in another terminal.
+
+cp -r /vagrant/webapp/aspe_ol3_test/* /var/www/html/
+
+chown -R www-data /var/www/html/*

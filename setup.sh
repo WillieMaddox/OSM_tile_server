@@ -42,6 +42,7 @@ make -j 8
 sudo make install
 sudo ldconfig
 
+
 cd ~/src
 if [ -e mod_tile ]; then 
   cd mod_tile
@@ -58,6 +59,7 @@ sudo make install-mod_tile
 sudo ldconfig
 cd ../
 sudo cp openstreetmap-tiles-update-expire /usr/bin/
+
 
 cd ~/src
 if [ -e osmosis ]; then 
