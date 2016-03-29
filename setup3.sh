@@ -4,6 +4,9 @@ GISUSER=vagrant
 GISPASS=vagrant
 DB=gis
 
+sudo cp -r /vagrant/webapp/aspe_ol3_test/* /var/www/html/
+sudo chown -R www-data /var/www/html/*
+
 #PLANETDIR="/usr/local/share/maps/planet"
 PLANETDIR="/vagrant/data/planet/"
 
@@ -43,22 +46,21 @@ if [[ ! -f ${PLANETFILE} ]]; then
 fi
 
 # osm2pgsql -c -d gis -U ${GISUSER} --slim -C 24000 -k --flat-nodes /var/lib/mod_tile/planet.cache --number-processes 4  ${PLANETFILE}
---tablespace-slim-index gisidxslim --tablespace-slim-data gisdatslim
---tablespace-main-index gisidxmain --tablespace-main-data gisdatmain
-time osm2pgsql -c -d gis --slim -C 48000 --flat-nodes /var/lib/mod_tile/planet.cache --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
-# if [[ ! -d /var/run/renderd ]]; then
-#     mkdir /var/run/renderd
-# fi
-# chown ${GISUSER} /var/run/renderd
+# --tablespace-slim-index gisidxslim --tablespace-slim-data gisdatslim
+# --tablespace-main-index gisidxmain --tablespace-main-data gisdatmain
+# time osm2pgsql -c -d gis --slim -C 48000 --flat-nodes /var/lib/mod_tile/planet.cache --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
+time osm2pgsql -c -d gis -C 48000 --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
+
+if [[ ! -d /var/run/renderd ]]; then
+    mkdir /var/run/renderd
+fi
+chown ${GISUSER} /var/run/renderd
 
 # echo '##############################'
 # echo '##### OSM Bright config 2 ####'
 # echo '##############################'
 
-# renderd -f -c /usr/local/etc/renderd.conf
-
+sudo -u ${GISUSER} renderd -f -c /usr/local/etc/renderd.conf
 # Then restart apache in another terminal.
+sudo service apache2 restart
 
-cp -r /vagrant/webapp/aspe_ol3_test/* /var/www/html/
-
-chown -R www-data /var/www/html/*
