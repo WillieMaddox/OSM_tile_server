@@ -45,11 +45,14 @@ if [[ ! -f ${PLANETFILE} ]]; then
     wget ${URLFILE} -O ${PLANETFILE}
 fi
 
-# osm2pgsql -c -d gis -U ${GISUSER} --slim -C 24000 -k --flat-nodes /var/lib/mod_tile/planet.cache --number-processes 4  ${PLANETFILE}
+MEM=`grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`
+CACHE=`echo "$MEM * 0.8" | bc`
+
+# osm2pgsql -c -d gis -U ${GISUSER}  --number-processes 4 --slim -C ${CACHE} -k --flat-nodes /var/lib/mod_tile/planet.cache ${PLANETFILE}
 # --tablespace-slim-index gisidxslim --tablespace-slim-data gisdatslim
 # --tablespace-main-index gisidxmain --tablespace-main-data gisdatmain
-# time osm2pgsql -c -d gis --slim -C 48000 --flat-nodes /var/lib/mod_tile/planet.cache --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
-time osm2pgsql -c -d gis -C 48000 --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
+# time osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 48000 --flat-nodes /var/lib/mod_tile/planet.cache /vagrant/data/planet/north-america-latest.osm.pbf
+time osm2pgsql -c -d gis --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
 
 if [[ ! -d /var/run/renderd ]]; then
     mkdir /var/run/renderd
