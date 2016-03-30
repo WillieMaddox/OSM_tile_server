@@ -19,6 +19,11 @@ Vagrant.configure(2) do |config|
     osm.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
     osm.vm.network "forwarded_port", guest: 5432, host: 5432, auto_correct: true
 
+#     osm.vm.synced_folder '.', '/vagrant',
+#       :nfs => true,
+#       :mount_options => ['vers=4,tcp,fsc,actimeo=2'],
+#       :linux__nfs_options => ['rw','no_subtree_check','all_squash','async']
+
 #     osm.vm.synced_folder "/media/Borg_LS/osm_data", "/osm_data",
 #       :nfs => true,
 #       :mount_options => ['vers=4,tcp,noatime']
@@ -40,11 +45,30 @@ Vagrant.configure(2) do |config|
 #       :nfs => true,
 #       :mount_options => ['vers=3,nolock,tcp,noatime,fsc']
 
-
     osm.vm.provider "virtualbox" do |vb|
+      host = RbConfig::CONFIG['host_os']
+
+      # Give VM 1/4 system memory
+      if host =~ /darwin/
+        # sysctl returns Bytes and we need to convert to MB
+        mem = `sysctl -n hw.memsize`.to_i / 1024
+      elsif host =~ /linux/
+        # meminfo shows KB and we need to convert to MB
+        mem = `grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`.to_i
+      elsif host =~ /mswin|mingw|cygwin/
+        # Windows code via https://github.com/rdsubhas/vagrant-faster
+        mem = `wmic computersystem Get TotalPhysicalMemory`.split[1].to_i / 1024
+      end
+
+      mem = mem / 1024 / 2
+      vb.customize ["modifyvm", :id, "--memory", mem]
       vb.cpus = 8
-      vb.memory = 64000
     end
+
+#     osm.vm.provider "virtualbox" do |vb|
+#       vb.cpus = 8
+#       vb.memory = 32000
+#     end
 
 #     osm.bindfs.bind_folder "/osm_data", "/osm_nfs",
 #       :owner => "postgres",
@@ -58,9 +82,9 @@ Vagrant.configure(2) do |config|
 # #       :'chgrp-ignore' => true,
 # #       :'chmod-ignore' => true
 
-    osm.vm.provision :shell, :path => "install.sh"
-    osm.vm.provision :shell, :path => "setup.sh", :privileged => false
-    osm.vm.provision :shell, :path => "setup2.sh"
+    # osm.vm.provision :shell, :path => "install.sh"
+#     osm.vm.provision :shell, :path => "setup.sh", :privileged => false
+#     osm.vm.provision :shell, :path => "setup2.sh"
 #     osm.vm.provision :shell, :path => "setup3.sh"
   end
 end
