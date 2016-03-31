@@ -24,7 +24,7 @@ apt-get install -qy \
   nfs-common portmap \
   gfortran make cmake g++ libblas-dev liblapack-dev libboost-all-dev \
   libffi-dev libssl-dev libexpat1-dev \
-  python-dev python-setuptools \
+  python-dev python-setuptools python-nose python-cairo-dev \
   libgeos-dev libgeos++-dev libpq-dev libproj-dev \
   munin-node munin \
   libprotobuf-c0-dev protobuf-c-compiler \

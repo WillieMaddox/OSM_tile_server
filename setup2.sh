@@ -160,6 +160,9 @@ echo '##############################'
 echo '## Setting up your webserver #'
 echo '##############################'
 
+cp -r /vagrant/webapp/aspe_ol3_test/* /var/www/html/
+chown -R www-data /var/www/html/*
+
 # Configure renderd
 
 cp /vagrant/data/mods/renderd.conf /usr/local/etc/renderd.conf

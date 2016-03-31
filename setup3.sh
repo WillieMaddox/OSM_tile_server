@@ -4,9 +4,6 @@ GISUSER=vagrant
 GISPASS=vagrant
 DB=gis
 
-sudo cp -r /vagrant/webapp/aspe_ol3_test/* /var/www/html/
-sudo chown -R www-data /var/www/html/*
-
 #PLANETDIR="/usr/local/share/maps/planet"
 PLANETDIR="/vagrant/data/planet/"
 
