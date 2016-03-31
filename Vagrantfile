@@ -24,7 +24,7 @@ Vagrant.configure(2) do |config|
 #       :mount_options => ['vers=4,tcp,fsc,actimeo=2'],
 #       :linux__nfs_options => ['rw','no_subtree_check','all_squash','async']
 
-#     osm.vm.synced_folder "/media/Borg_LS/osm_data", "/osm_data",
+#     osm.vm.synced_folder "/media/Borg_LS/osm_data", "/osm_nfs",
 #       :nfs => true,
 #       :mount_options => ['vers=4,tcp,noatime']
 
@@ -70,14 +70,13 @@ Vagrant.configure(2) do |config|
 #       vb.memory = 32000
 #     end
 
-#     osm.bindfs.bind_folder "/osm_data", "/osm_nfs",
-#       :owner => "postgres",
-#       :group => "postgres",
-# #       :perms => "u=rwx:g=rwx:o=rwx",
-#       :perms => "u=rwx:g=r:o=r",
-# #       :'create-with-perms' => "u=rwx:g=rwx:o=rwx",
+#     osm.bindfs.bind_folder "/osm_nfs", "/osm_nfs",
+#       :'force-user' => "postgres",
+#       :'force-group' => "postgres",
+#       :'perms' => "u=rwx:g=r:o=r",
 #       :'create-with-perms' => "u=rwx:g=r:o=r",
-#       :'create-as-user' => true
+#       :'create-as-user' => true,
+#       :'multithreaded' => true
 # #       :'chown-ignore' => true,
 # #       :'chgrp-ignore' => true,
 # #       :'chmod-ignore' => true
