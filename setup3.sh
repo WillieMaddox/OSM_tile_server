@@ -71,3 +71,5 @@ sudo -u ${GISUSER} renderd -f -c /usr/local/etc/renderd.conf
 # Then restart apache in another terminal.
 sudo service apache2 restart
 
+# time sh -c "dd if=/dev/zero of=bigfile bs=8k count=250000 && sync"
+# time dd if=bigfile of=/dev/null bs=8k

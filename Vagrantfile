@@ -24,18 +24,27 @@ Vagrant.configure(2) do |config|
 #       :mount_options => ['vers=4,tcp,fsc,actimeo=2'],
 #       :linux__nfs_options => ['rw','no_subtree_check','all_squash','async']
 
-#     osm.vm.synced_folder "/media/Borg_LS/osm_data", "/osm_nfs",
+#     osm.vm.synced_folder "./test/osm6", "/ssd_nfs",
 #       :nfs => true,
-#       :mount_options => ['vers=4,tcp,noatime']
+#       :mount_options => ['vers=4,tcp,noatime,actimeo=1']
+#
+#     osm.vm.synced_folder "/media/Borg_LS/osm_data", "/hdd_nfs",
+#       :nfs => true,
+#       :mount_options => ['vers=4,tcp,noatime,actimeo=1']
 
-#     osm.vm.synced_folder "/media/Borg_LS/test/osm0", "/osm0",
-#       :nfs => true,
-#       :mount_options => ['vers=4,noatime']
-#
-#     osm.vm.synced_folder "/media/Borg_LS/test/osm1", "/osm1",
-#       :nfs => true,
-#       :mount_options => ['vers=4']
-#
+    osm.vm.synced_folder "/home/maddoxw/osm_ssd", "/osm_ssd"
+
+    osm.vm.synced_folder "/media/Borg_LS/osm_hdd", "/osm_hdd"
+
+    osm.vm.synced_folder "/home/maddoxw/osm_ssd", "/osm_ssd_nfs",
+      :nfs => true,
+      :mount_options => ['vers=4,tcp,noatime,actimeo=1']
+
+    osm.vm.synced_folder "/media/Borg_LS/osm_hdd", "/osm_hdd_nfs",
+      :nfs => true,
+      :mount_options => ['vers=4,tcp,noatime,actimeo=1']
+
+
 #     osm.vm.synced_folder "/media/Borg_LS/test/osm2", "/osm2",
 #       :nfs => true,
 #       :mount_options => ['vers=4,tcp,fsc,actimeo=2'],
@@ -70,7 +79,15 @@ Vagrant.configure(2) do |config|
 #       vb.memory = 32000
 #     end
 
-#     osm.bindfs.bind_folder "/osm_nfs", "/osm_nfs",
+#     osm.bindfs.bind_folder "/ssd_nfs", "/ssd_nfs",
+#       :'force-user' => "postgres",
+#       :'force-group' => "postgres",
+#       :'perms' => "u=rwx:g=r:o=r",
+#       :'create-with-perms' => "u=rwx:g=r:o=r",
+#       :'create-as-user' => true,
+#       :'multithreaded' => true
+
+#     osm.bindfs.bind_folder "/hdd_nfs", "/hdd_nfs",
 #       :'force-user' => "postgres",
 #       :'force-group' => "postgres",
 #       :'perms' => "u=rwx:g=r:o=r",
