@@ -59,6 +59,13 @@ if [[ ! -d /var/run/renderd ]]; then
 fi
 chown ${GISUSER} /var/run/renderd
 
+cat << EOF | su - postgres -c ${DB}
+ALTER TABLE public.planet_osm_ways SET (autovacuum_vacuum_scale_factor = 0.0);
+ALTER TABLE public.planet_osm_ways SET (autovacuum_vacuum_threshold = 5000);
+ALTER TABLE public.planet_osm_ways SET (autovacuum_analyze_scale_factor = 0.0);
+ALTER TABLE public.planet_osm_ways SET (autovacuum_analyze_threshold = 5000);
+EOF
+
 # echo '##############################'
 # echo '##### OSM Bright config 2 ####'
 # echo '##############################'
