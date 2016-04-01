@@ -24,25 +24,13 @@ Vagrant.configure(2) do |config|
 #       :mount_options => ['vers=4,tcp,fsc,actimeo=2'],
 #       :linux__nfs_options => ['rw','no_subtree_check','all_squash','async']
 
-#     osm.vm.synced_folder "./test/osm6", "/ssd_nfs",
-#       :nfs => true,
-#       :mount_options => ['vers=4,tcp,noatime,actimeo=1']
-#
-#     osm.vm.synced_folder "/media/Borg_LS/osm_data", "/hdd_nfs",
-#       :nfs => true,
-#       :mount_options => ['vers=4,tcp,noatime,actimeo=1']
-
     osm.vm.synced_folder "/home/maddoxw/osm_ssd", "/osm_ssd"
-
-    osm.vm.synced_folder "/media/Borg_LS/osm_hdd", "/osm_hdd"
-
     osm.vm.synced_folder "/home/maddoxw/osm_ssd", "/osm_ssd_nfs",
-      :nfs => true,
-      :mount_options => ['vers=4,tcp,noatime,actimeo=1']
+      :nfs => true, :mount_options => ['fsc,vers=4,tcp,noatime,actimeo=2']
 
-    osm.vm.synced_folder "/media/Borg_LS/osm_hdd", "/osm_hdd_nfs",
-      :nfs => true,
-      :mount_options => ['vers=4,tcp,noatime,actimeo=1']
+    osm.vm.synced_folder "/media/BLACK/osm_hdd", "/osm_hdd"
+    osm.vm.synced_folder "/media/BLACK/osm_hdd", "/osm_hdd_nfs",
+      :nfs => true, :mount_options => ['rw,vers=3,tcp,noatime,actimeo=1']
 
 
 #     osm.vm.synced_folder "/media/Borg_LS/test/osm2", "/osm2",
@@ -100,7 +88,7 @@ Vagrant.configure(2) do |config|
 
     # osm.vm.provision :shell, :path => "install.sh"
 #     osm.vm.provision :shell, :path => "setup.sh", :privileged => false
-#     osm.vm.provision :shell, :path => "setup2.sh"
+    osm.vm.provision :shell, :path => "setup2.sh"
 #     osm.vm.provision :shell, :path => "setup3.sh"
   end
 end

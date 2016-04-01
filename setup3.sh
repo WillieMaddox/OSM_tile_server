@@ -46,8 +46,8 @@ MEM=`grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`
 CACHE=`echo "$MEM * 0.8" | bc`
 
 # osm2pgsql -c -d gis -U ${GISUSER}  --number-processes 4 --slim -C ${CACHE} -k --flat-nodes /var/lib/mod_tile/planet.cache ${PLANETFILE}
-# --tablespace-slim-index gisidxslim --tablespace-slim-data gisdatslim
-# --tablespace-main-index gisidxmain --tablespace-main-data gisdatmain
+# --tablespace-slim-index slim_idx --tablespace-slim-data slim_data
+# --tablespace-main-index main_idx --tablespace-main-data main_data
 # time osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 48000 --flat-nodes /var/lib/mod_tile/planet.cache /vagrant/data/planet/north-america-latest.osm.pbf
 time osm2pgsql -c -d gis --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
 
@@ -55,6 +55,8 @@ if [[ ! -d /var/run/renderd ]]; then
     mkdir /var/run/renderd
 fi
 chown ${GISUSER} /var/run/renderd
+
+render_list --all -n 8 -s /var/run/renderd/renderd.sock -z 0 -Z 7
 
 cat << EOF | su - postgres -c ${DB}
 ALTER TABLE public.planet_osm_ways SET (autovacuum_vacuum_scale_factor = 0.0);
@@ -73,3 +75,4 @@ sudo service apache2 restart
 
 # time sh -c "dd if=/dev/zero of=bigfile bs=8k count=250000 && sync"
 # time dd if=bigfile of=/dev/null bs=8k
+
