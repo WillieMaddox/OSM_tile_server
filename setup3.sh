@@ -4,24 +4,33 @@ GISUSER=vagrant
 GISPASS=vagrant
 DB=gis
 
+
 #PLANETDIR="/usr/local/share/maps/planet"
 PLANETDIR="/vagrant/data/planet/"
 
 #####################################################
 URLBASE="http://download.geofabrik.de/north-america/us/"
 PBFFILE="alabama-latest.osm.pbf"
-## Date:   0311_2016_1751
+## Date:   0330_2016_0036
 ## Nodes:         6849k
 ## Ways:           432k
-## Relations:        2490
+## Relations:     2490
+
+#####################################################
+#URLBASE="http://download.geofabrik.de/north-america/"
+#PBFFILE="us-south-latest.osm.pbf"
+## Date:   0330_2016_0056
+## Nodes:       198608k
+## Ways:         14357k
+## Relations:    94690
 
 #####################################################
 #URLBASE="http://download.geofabrik.de/"
 #PBFFILE="north-america-latest.osm.pbf"
-## Date:   0314_2016_1726
+## Date:   0329_2016_1631
 ## Nodes:       811758k
 ## Ways:         55940k
-## Relations:      505050
+## Relations:   505050
 
 #####################################################
 #URLBASE="http://planet.openstreetmap.org/pbf/"
@@ -46,9 +55,10 @@ MEM=`grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`
 CACHE=`echo "$MEM * 0.8" | bc`
 
 # osm2pgsql -c -d gis -U ${GISUSER}  --number-processes 4 --slim -C ${CACHE} -k --flat-nodes /var/lib/mod_tile/planet.cache ${PLANETFILE}
-# --tablespace-slim-index slim_idx --tablespace-slim-data slim_data
-# --tablespace-main-index main_idx --tablespace-main-data main_data
-# time osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 48000 --flat-nodes /var/lib/mod_tile/planet.cache /vagrant/data/planet/north-america-latest.osm.pbf
+# --tablespace-main-data main_data --tablespace-main-index main_idx
+# --tablespace-slim-data slim_data --tablespace-slim-index slim_idx
+time osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx --tablespace-slim-data slim_data --tablespace-slim-index slim_idx /vagrant/data/planet/north-america-latest.osm.pbf
+time osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache /vagrant/data/planet/north-america-latest.osm.pbf
 time osm2pgsql -c -d gis --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
 
 if [[ ! -d /var/run/renderd ]]; then
@@ -56,7 +66,10 @@ if [[ ! -d /var/run/renderd ]]; then
 fi
 chown ${GISUSER} /var/run/renderd
 
-render_list --all -n 8 -s /var/run/renderd/renderd.sock -z 0 -Z 7
+sudo -u ${GISUSER} renderd -f -c /usr/local/etc/renderd.conf
+sudo -u vagrant renderd -f -c /usr/local/etc/renderd.conf
+# Then restart apache in another terminal.
+sudo service apache2 restart
 
 cat << EOF | su - postgres -c ${DB}
 ALTER TABLE public.planet_osm_ways SET (autovacuum_vacuum_scale_factor = 0.0);
@@ -65,14 +78,7 @@ ALTER TABLE public.planet_osm_ways SET (autovacuum_analyze_scale_factor = 0.0);
 ALTER TABLE public.planet_osm_ways SET (autovacuum_analyze_threshold = 5000);
 EOF
 
-# echo '##############################'
-# echo '##### OSM Bright config 2 ####'
-# echo '##############################'
-
-sudo -u ${GISUSER} renderd -f -c /usr/local/etc/renderd.conf
-# Then restart apache in another terminal.
-sudo service apache2 restart
-
+render_list --all -n 4 -s /var/run/renderd/renderd.sock -z 0 -Z 7
+# dstat -tmcd -D sda1,sdb1,sdb2,sdb3,sdb4
 # time sh -c "dd if=/dev/zero of=bigfile bs=8k count=250000 && sync"
 # time dd if=bigfile of=/dev/null bs=8k
-

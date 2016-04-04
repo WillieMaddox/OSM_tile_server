@@ -5,7 +5,7 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get upgrade -qy
 
-apt-get install -qy htop
+apt-get install -qy htop dstat sysstat parted
 
 apt-get install -qy apache2 apache2-dev apache2-utils apache2-dbg
 # echo '127.0.0.1 localhost gis.local.osm' | cat - /etc/hosts > /tmp/out && mv /tmp/out /etc/hosts
@@ -33,7 +33,7 @@ apt-get install -qy \
   liblua5.2-dev lua5.1 liblua5.1-dev ttf-unifont node-carto \
   openjdk-7-source junit
 
-apt-get install -qy postgresql postgresql-contrib postgis postgresql-9.3-postgis-2.1
+apt-get install -qy postgresql postgresql-contrib postgis postgresql-9.3-postgis-2.1 python-psycopg2
 
 PG_VERSION=9.3
 PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
@@ -49,3 +49,4 @@ sed -i "s/md5/trust/" "$PG_HBA"
 sed -i "s/peer/trust/" "$PG_HBA"
 
 service postgresql restart
+

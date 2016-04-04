@@ -21,6 +21,16 @@ cd build
 cmake ..
 make -j 8
 sudo make install
+
+sudo mkdir -p /tmp/psql-tablespace
+sudo /bin/chown postgres.postgres /tmp/psql-tablespace
+psql -c "CREATE TABLESPACE tablespacetest LOCATION '/tmp/psql-tablespace'" postgres
+
+cd tests
+make -j 4
+cd ../
+make test
+
 cd ../
 sudo cp install-postgis-osm-user.sh /usr/bin/
 sudo cp install-postgis-osm-db.sh /usr/bin/
@@ -58,7 +68,7 @@ sudo make install
 sudo make install-mod_tile
 sudo ldconfig
 cd ../
-sudo cp openstreetmap-tiles-update-expire /usr/bin/
+sudo touch /usr/bin/openstreetmap-tiles-update-expire
 
 
 cd ~/src
