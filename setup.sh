@@ -30,7 +30,6 @@ cd tests
 make -j 4
 cd ../
 make test
-
 cd ../
 sudo cp install-postgis-osm-user.sh /usr/bin/
 sudo cp install-postgis-osm-db.sh /usr/bin/
@@ -72,7 +71,7 @@ sudo touch /usr/bin/openstreetmap-tiles-update-expire
 
 
 cd ~/src
-if [ -e osmosis ]; then 
+if [ -e osmosis ]; then
   cd osmosis
   git pull
 else
