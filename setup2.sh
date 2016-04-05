@@ -63,17 +63,17 @@ DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
-SSDTBLSPCPATH=/mnt/vssd3/vssd
-TBLSPC=slim_data
-TBLSPCPATH=${SSDTBLSPCPATH}/${TBLSPC}
-if [[ ! -d ${TBLSPCPATH} ]]; then
-    mkdir -p ${TBLSPCPATH}
-fi
-chown postgres:postgres ${TBLSPCPATH}
-cat << EOF | su - postgres -c psql
-DROP TABLESPACE IF EXISTS ${TBLSPC};
-CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
-EOF
+# SSDTBLSPCPATH=/mnt/vssd3/vssd
+# TBLSPC=slim_data
+# TBLSPCPATH=${SSDTBLSPCPATH}/${TBLSPC}
+# if [[ ! -d ${TBLSPCPATH} ]]; then
+#     mkdir -p ${TBLSPCPATH}
+# fi
+# chown postgres:postgres ${TBLSPCPATH}
+# cat << EOF | su - postgres -c psql
+# DROP TABLESPACE IF EXISTS ${TBLSPC};
+# CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
+# EOF
 
 # SSDTBLSPCPATH=/mnt/vssd4/vssd
 # TBLSPC=slim_idx
@@ -126,7 +126,6 @@ cd ${STYLEDIR}
 if [[ ! -d osm-bright-master ]]; then
     unzip ${ZIPSDIR}osm-bright-master.zip
 fi
-
 if [[ ! -d osm-bright-master/shp ]]; then
     mkdir osm-bright-master/shp
 fi
@@ -136,21 +135,17 @@ cd osm-bright-master/shp
 if [[ ! -f simplified-land-polygons-complete-3857/simplified-land-polygons.shp ]]; then
     unzip ${ZIPSDIR}simplified-land-polygons-complete-3857.zip
 fi
-
 if [[ ! -f land-polygons-split-3857/land-polygons.shp ]]; then
     unzip ${ZIPSDIR}land-polygons-split-3857.zip
 fi
-
 if [[ ! -f ne_10m_populated_places_simple/ne_10m_populated_places_simple.shp ]]; then
     unzip -d ne_10m_populated_places_simple ${ZIPSDIR}ne_10m_populated_places_simple.zip
 fi
-
 if [[ ! -f land-polygons-split-3857/land-polygons.index ]]; then
     cd land-polygons-split-3857
     shapeindex land_polygons.shp
     cd ../
 fi
-
 if [[ ! -f simplified-land-polygons-complete-3857/simplified_land_polygons.index ]]; then
     cd simplified-land-polygons-complete-3857
     shapeindex simplified_land_polygons.shp
