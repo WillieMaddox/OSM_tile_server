@@ -28,7 +28,7 @@ PBFFILE="alabama-latest.osm.pbf"
 #URLBASE="http://download.geofabrik.de/"
 #PBFFILE="north-america-latest.osm.pbf"
 ## Date:   0329_2016_1631
-## Nodes:       811758k
+## Nodes:       813717k
 ## Ways:         55940k
 ## Relations:   505050
 
@@ -79,6 +79,10 @@ ALTER TABLE public.planet_osm_ways SET (autovacuum_analyze_threshold = 5000);
 EOF
 
 render_list --all -n 4 -s /var/run/renderd/renderd.sock -z 0 -Z 7
-# dstat -tmcd -D sda1,sdb1,sdb2,sdb3,sdb4
-# time sh -c "dd if=/dev/zero of=bigfile bs=8k count=250000 && sync"
-# time dd if=bigfile of=/dev/null bs=8k
+
+time sh -c "dd if=/dev/zero of=bigfile bs=8k count=250000 && sync"
+time dd if=bigfile of=/dev/null bs=8k
+
+dstat -tmcd -D sda1,sdb1,sdb2,sdb3,sdb4
+for II in {1..4600}; do date; df | grep /dev/sdb; sleep 10; done
+time osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx /vagrant/data/planet/north-america-latest.osm.pbf
