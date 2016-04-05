@@ -50,3 +50,27 @@ sed -i "s/peer/trust/" "$PG_HBA"
 
 service postgresql restart
 
+GISUSER=vagrant
+GISPASS=vagrant
+DB=gis
+
+echo '##############################'
+echo '##### Adding Ubuntu user #####'
+echo '##############################'
+
+# Need to figure out how to make this work.
+# Adding the password flag -p when creating the user is not secure.
+#sudo useradd -m ${GISUSER}
+#sudo passwd ${GISUSER} < ${GISPASS}
+if [[ ${GISUSER} != vagrant ]]; then
+    useradd -m ${GISUSER} -p ${GISPASS}
+fi
+
+echo '##############################'
+echo '##### Adding postgres user ###'
+echo '##############################'
+
+cat << EOF | su - postgres -c psql
+CREATE USER ${GISUSER} WITH SUPERUSER PASSWORD '${GISPASS}';
+EOF
+

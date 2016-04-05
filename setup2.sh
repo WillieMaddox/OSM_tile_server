@@ -1,28 +1,7 @@
 #!/usr/bin/env bash
 
 GISUSER=vagrant
-GISPASS=vagrant
 DB=gis
-
-echo '##############################'
-echo '##### Adding Ubuntu user #####'
-echo '##############################'
-
-# Need to figure out how to make this work.
-# Adding the password flag -p when creating the user is not secure.
-#sudo useradd -m ${GISUSER}
-#sudo passwd ${GISUSER} < ${GISPASS}
-if [[ ${GISUSER} != vagrant ]]; then
-    useradd -m ${GISUSER} -p ${GISPASS}
-fi
-
-echo '##############################'
-echo '##### Adding postgres user ###'
-echo '##############################'
-
-cat << EOF | su - postgres -c psql
-CREATE USER ${GISUSER} WITH SUPERUSER PASSWORD '${GISPASS}';
-EOF
 
 cat << EOF | su - postgres -c psql
 DROP DATABASE IF EXISTS ${DB};
@@ -41,7 +20,7 @@ HDDTBLSPCPATH=/var/lib/postgresql/9.3/main
 
 SSDTBLSPCPATH=/mnt/vssd1/vssd
 TBLSPC=main_data
-TBLSPCPATH=${SSDTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -75,17 +54,17 @@ EOF
 # CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 # EOF
 
-# SSDTBLSPCPATH=/mnt/vssd4/vssd
-# TBLSPC=slim_idx
-# TBLSPCPATH=${SSDTBLSPCPATH}/${TBLSPC}
-# if [[ ! -d ${TBLSPCPATH} ]]; then
-#     mkdir -p ${TBLSPCPATH}
-# fi
-# chown postgres:postgres ${TBLSPCPATH}
-# cat << EOF | su - postgres -c psql
-# DROP TABLESPACE IF EXISTS ${TBLSPC};
-# CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
-# EOF
+SSDTBLSPCPATH=/mnt/vssd4/vssd
+TBLSPC=slim_idx
+TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
+if [[ ! -d ${TBLSPCPATH} ]]; then
+    mkdir -p ${TBLSPCPATH}
+fi
+chown postgres:postgres ${TBLSPCPATH}
+cat << EOF | su - postgres -c psql
+DROP TABLESPACE IF EXISTS ${TBLSPC};
+CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
+EOF
 
 echo '##############################'
 echo '##### Stylesheet config ######'
