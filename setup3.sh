@@ -66,6 +66,11 @@ if [[ ! -d /var/run/renderd ]]; then
 fi
 chown ${GISUSER} /var/run/renderd
 
+# sudo install-postgis-osm-user.sh gis www-data
+# sudo ln -s /home/vagrant/src/mod_tile/munin/* /etc/munin/plugins/
+# sudo chmod a+x /home/vagrant/src/mod_tile/munin/*
+# sudo munin-node-configure --shell | sudo sh
+
 sudo -u ${GISUSER} renderd -f -c /usr/local/etc/renderd.conf
 sudo -u vagrant renderd -f -c /usr/local/etc/renderd.conf
 # Then restart apache in another terminal.
@@ -86,3 +91,11 @@ time dd if=bigfile of=/dev/null bs=8k
 dstat -tmcd -D sda1,sdb1,sdb2,sdb3,sdb4
 for II in {1..4600}; do date; df | grep /dev/sdb; sleep 10; done
 time osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx /vagrant/data/planet/north-america-latest.osm.pbf
+
+sudo /usr/bin/install-postgis-osm-user.sh gis www-data
+if [[ ! -d /var/log/tiles ]]; then
+    sudo mkdir /var/log/tiles
+fi
+sudo chown -R www-data:www-data /var/log/tiles
+PBF_CRTIME=`pbf_crtime ${PLANETFILE}`
+sudo -u www-data /usr/bin/openstreetmap-tiles-update-expire ${PBF_CRTIME}

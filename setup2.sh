@@ -21,6 +21,9 @@ HDDTBLSPCPATH=/var/lib/postgresql/9.3/main
 SSDTBLSPCPATH=/mnt/vssd1/vssd
 TBLSPC=main_data
 TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
+# if [[ -d ${TBLSPCPATH} ]]; then
+#     rm -rf ${TBLSPCPATH}/*
+# fi
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -32,7 +35,10 @@ EOF
 
 SSDTBLSPCPATH=/mnt/vssd2/vssd
 TBLSPC=main_idx
-TBLSPCPATH=${SSDTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
+# if [[ -d ${TBLSPCPATH} ]]; then
+#     rm -rf ${TBLSPCPATH}/*
+# fi
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -42,21 +48,27 @@ DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
-# SSDTBLSPCPATH=/mnt/vssd3/vssd
-# TBLSPC=slim_data
-# TBLSPCPATH=${SSDTBLSPCPATH}/${TBLSPC}
-# if [[ ! -d ${TBLSPCPATH} ]]; then
-#     mkdir -p ${TBLSPCPATH}
+SSDTBLSPCPATH=/mnt/vssd3/vssd
+TBLSPC=slim_data
+TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
+# if [[ -d ${TBLSPCPATH} ]]; then
+#     rm -rf ${TBLSPCPATH}/*
 # fi
-# chown postgres:postgres ${TBLSPCPATH}
-# cat << EOF | su - postgres -c psql
-# DROP TABLESPACE IF EXISTS ${TBLSPC};
-# CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
-# EOF
+if [[ ! -d ${TBLSPCPATH} ]]; then
+    mkdir -p ${TBLSPCPATH}
+fi
+chown postgres:postgres ${TBLSPCPATH}
+cat << EOF | su - postgres -c psql
+DROP TABLESPACE IF EXISTS ${TBLSPC};
+CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
+EOF
 
 SSDTBLSPCPATH=/mnt/vssd4/vssd
 TBLSPC=slim_idx
 TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
+# if [[ -d ${TBLSPCPATH} ]]; then
+#     rm -rf ${TBLSPCPATH}/*
+# fi
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -65,6 +77,17 @@ cat << EOF | su - postgres -c psql
 DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
+
+# SSDTBLSPCPATH=/mnt/vssd4/vssd
+# TBLSPC=node_cache
+# TBLSPCPATH=${HDTBLSPCPATH}/${TBLSPC}
+# if [[ -d ${TBLSPCPATH} ]]; then
+#     rm -rf ${TBLSPCPATH}
+# fi
+# if [[ ! -d ${TBLSPCPATH} ]]; then
+#     mkdir -p ${TBLSPCPATH}
+# fi
+# chown vagrant:vagrant ${TBLSPCPATH}
 
 echo '##############################'
 echo '##### Stylesheet config ######'
@@ -172,7 +195,7 @@ cp /vagrant/data/mods/renderd.conf /usr/local/etc/renderd.conf
 if [[ ! -d /var/lib/mod_tile ]]; then
    mkdir /var/lib/mod_tile
 fi
-chown ${GISUSER} /var/lib/mod_tile
+chown vagrant:vagrant /var/lib/mod_tile
 
 echo "LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so" > /etc/apache2/conf-available/mod_tile.conf
 

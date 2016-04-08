@@ -26,7 +26,7 @@ apt-get install -qy \
   libffi-dev libssl-dev libexpat1-dev \
   python-dev python-setuptools python-nose python-cairo-dev \
   libgeos-dev libgeos++-dev libpq-dev libproj-dev \
-  munin-node munin \
+  munin-node munin libdbd-pg-perl \
   libprotobuf-c0-dev protobuf-c-compiler \
   libxml2-dev libfreetype6-dev libpng12-dev libtiff4-dev libagg-dev libgeotiff-epsg \
   libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev gdal-bin python-gdal \
@@ -34,6 +34,9 @@ apt-get install -qy \
   openjdk-7-source junit
 
 apt-get install -qy postgresql postgresql-contrib postgis postgresql-9.3-postgis-2.1 python-psycopg2
+
+cp -r /vagrant/home/* /home/vagrant/
+chown -R vagrant:vagrant /home/vagrant/
 
 PG_VERSION=9.3
 PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
@@ -43,7 +46,9 @@ PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
 # Tuning postgresql
 
 cp /vagrant/data/mods/postgresql.conf ${PG_CONF}
+# set shmmax to the size of postgresql shared_buffers or 2*size.
 # echo 'kernel.shmmax=8589934592' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
+echo 'kernel.shmmax=17179869184' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
 sed -i "s/md5/trust/" "$PG_HBA"
 sed -i "s/peer/trust/" "$PG_HBA"
@@ -54,10 +59,6 @@ GISUSER=vagrant
 GISPASS=vagrant
 DB=gis
 
-echo '##############################'
-echo '##### Adding Ubuntu user #####'
-echo '##############################'
-
 # Need to figure out how to make this work.
 # Adding the password flag -p when creating the user is not secure.
 #sudo useradd -m ${GISUSER}
@@ -65,10 +66,6 @@ echo '##############################'
 if [[ ${GISUSER} != vagrant ]]; then
     useradd -m ${GISUSER} -p ${GISPASS}
 fi
-
-echo '##############################'
-echo '##### Adding postgres user ###'
-echo '##############################'
 
 cat << EOF | su - postgres -c psql
 CREATE USER ${GISUSER} WITH SUPERUSER PASSWORD '${GISPASS}';

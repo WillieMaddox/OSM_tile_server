@@ -50,7 +50,7 @@ python scons/scons.py configure INPUT_PLUGINS=all OPTIMIZATION=3 SYSTEM_FONTS=/u
 make -j 8
 sudo make install
 sudo ldconfig
-
+# Need to add man documentation -> man mapnik-speed-check
 
 cd ~/src
 if [ -e mod_tile ]; then 
@@ -66,9 +66,9 @@ make -j 8
 sudo make install
 sudo make install-mod_tile
 sudo ldconfig
-cd ../
-sudo touch /usr/bin/openstreetmap-tiles-update-expire
 
+# cp openstreetmap-tiles-update-expire /var/lib/mod_tile
+# touch /var/lib/mod_tile/planet-import-complete
 
 cd ~/src
 if [ -e osmosis ]; then
@@ -79,3 +79,7 @@ else
   cd osmosis
 fi
 ./gradlew assemble
+
+mkdir install
+cd install
+tar -xzf ../package/build/distribution/*.tgz
