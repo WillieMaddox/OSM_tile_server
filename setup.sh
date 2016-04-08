@@ -66,8 +66,6 @@ make -j 8
 sudo make install
 sudo make install-mod_tile
 sudo ldconfig
-cd ../
-sudo touch /usr/bin/openstreetmap-tiles-update-expire
 
 
 cd ~/src

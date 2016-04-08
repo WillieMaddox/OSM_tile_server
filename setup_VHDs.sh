@@ -23,10 +23,10 @@ fi
 if ! grep -qs '/mnt/vssd1' /proc/mounts; then
     mount /mnt/vssd1
 fi
-if [[ ! -d /mnt/vssd1/vssd ]]; then
-    mkdir /mnt/vssd1/vssd
-fi
-chown postgres -R /mnt/vssd1/vssd
+# if [[ ! -d /mnt/vssd1/vssd ]]; then
+#     mkdir /mnt/vssd1/vssd
+# fi
+# chown postgres -R /mnt/vssd1/vssd
 
 
 if [[ ! -b /dev/sdb2 ]]; then
@@ -42,10 +42,10 @@ fi
 if ! grep -qs '/mnt/vssd2' /proc/mounts; then
     mount /mnt/vssd2
 fi
-if [[ ! -d /mnt/vssd2/vssd ]]; then
-    mkdir /mnt/vssd2/vssd
-fi
-chown postgres -R /mnt/vssd2/vssd
+# if [[ ! -d /mnt/vssd2/vssd ]]; then
+#     mkdir /mnt/vssd2/vssd
+# fi
+# chown postgres -R /mnt/vssd2/vssd
 
 
 if [[ ! -b /dev/sdb3 ]]; then
@@ -61,10 +61,10 @@ fi
 if ! grep -qs '/mnt/vssd3' /proc/mounts; then
     mount /mnt/vssd3
 fi
-if [[ ! -d /mnt/vssd3/vssd ]]; then
-    mkdir /mnt/vssd3/vssd
-fi
-chown postgres -R /mnt/vssd3/vssd
+# if [[ ! -d /mnt/vssd3/vssd ]]; then
+#     mkdir /mnt/vssd3/vssd
+# fi
+# chown postgres -R /mnt/vssd3/vssd
 
 
 # if [[ ! -b /dev/sdb4 ]]; then

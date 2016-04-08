@@ -13,12 +13,9 @@ ALTER TABLE geometry_columns OWNER TO ${GISUSER};
 ALTER TABLE spatial_ref_sys OWNER TO ${GISUSER};
 EOF
 
-# SSDTBLSPC=/osm_nfs
 HDDTBLSPCPATH=/var/lib/postgresql/9.3/main
 
-# SSDTBLSPCPATH=/mnt/vssd/vssd
-
-SSDTBLSPCPATH=/mnt/vssd1/vssd
+SSDTBLSPCPATH=/mnt/vssd1
 TBLSPC=main_data
 TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
 if [[ ! -d ${TBLSPCPATH} ]]; then
@@ -30,9 +27,9 @@ DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
-SSDTBLSPCPATH=/mnt/vssd2/vssd
+SSDTBLSPCPATH=/mnt/vssd2
 TBLSPC=main_idx
-TBLSPCPATH=${SSDTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -42,9 +39,9 @@ DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
-SSDTBLSPCPATH=/mnt/vssd3/vssd
+SSDTBLSPCPATH=/mnt/vssd3
 TBLSPC=slim_data
-TBLSPCPATH=${SSDTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -54,7 +51,7 @@ DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
-SSDTBLSPCPATH=/mnt/vssd4/vssd
+SSDTBLSPCPATH=/mnt/vssd3
 TBLSPC=slim_idx
 TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
 if [[ ! -d ${TBLSPCPATH} ]]; then
@@ -65,6 +62,16 @@ cat << EOF | su - postgres -c psql
 DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
+
+# FLATNODESPATH=/var/lib/mod_tile
+# FLATNODESPATH=/mnt/vssd1/flat_nodes
+# if [[ ! -d ${FLATNODESPATH} ]]; then
+#     mkdir -p ${FLATNODESPATH}
+# fi
+# chown ${GISUSER}:${GISUSER} ${FLATNODESPATH}
+# if [[ -f ${FLATNODESPATH}/planet.cache ]]; then
+#     rm -rf ${FLATNODESPATH}/planet.cache
+# fi
 
 echo '##############################'
 echo '##### Stylesheet config ######'

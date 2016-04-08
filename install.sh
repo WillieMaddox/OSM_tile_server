@@ -54,9 +54,7 @@ GISUSER=vagrant
 GISPASS=vagrant
 DB=gis
 
-echo '##############################'
-echo '##### Adding Ubuntu user #####'
-echo '##############################'
+### Adding Ubuntu user
 
 # Need to figure out how to make this work.
 # Adding the password flag -p when creating the user is not secure.
@@ -66,9 +64,7 @@ if [[ ${GISUSER} != vagrant ]]; then
     useradd -m ${GISUSER} -p ${GISPASS}
 fi
 
-echo '##############################'
-echo '##### Adding postgres user ###'
-echo '##############################'
+### Adding postgres user
 
 cat << EOF | su - postgres -c psql
 CREATE USER ${GISUSER} WITH SUPERUSER PASSWORD '${GISPASS}';
