@@ -56,6 +56,8 @@ GISUSER=vagrant
 GISPASS=vagrant
 DB=gis
 
+### Adding Ubuntu user
+
 # Need to figure out how to make this work.
 # Adding the password flag -p when creating the user is not secure.
 #sudo useradd -m ${GISUSER}
@@ -63,6 +65,8 @@ DB=gis
 if [[ ${GISUSER} != vagrant ]]; then
     useradd -m ${GISUSER} -p ${GISPASS}
 fi
+
+### Adding postgres user
 
 cat << EOF | su - postgres -c psql
 CREATE USER ${GISUSER} WITH SUPERUSER PASSWORD '${GISPASS}';

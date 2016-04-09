@@ -18,9 +18,6 @@ HDDTBLSPCPATH=/var/lib/postgresql/9.3/main
 SSDTBLSPCPATH=/mnt/vssd1
 TBLSPC=main_data
 TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
-# if [[ -d ${TBLSPCPATH} ]]; then
-#     rm -rf ${TBLSPCPATH}/*
-# fi
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -32,10 +29,7 @@ EOF
 
 SSDTBLSPCPATH=/mnt/vssd2
 TBLSPC=main_idx
-TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
-# if [[ -d ${TBLSPCPATH} ]]; then
-#     rm -rf ${TBLSPCPATH}/*
-# fi
+TBLSPCPATH=${SSDTBLSPCPATH}/${TBLSPC}
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -48,9 +42,6 @@ EOF
 SSDTBLSPCPATH=/mnt/vssd3
 TBLSPC=slim_data
 TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
-# if [[ -d ${TBLSPCPATH} ]]; then
-#     rm -rf ${TBLSPCPATH}/*
-# fi
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -63,9 +54,6 @@ EOF
 SSDTBLSPCPATH=/mnt/vssd4
 TBLSPC=slim_idx
 TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
-# if [[ -d ${TBLSPCPATH} ]]; then
-#     rm -rf ${TBLSPCPATH}/*
-# fi
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -75,16 +63,15 @@ DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
-# SSDTBLSPCPATH=/mnt/vssd4/vssd
-# TBLSPC=node_cache
-# TBLSPCPATH=${HDTBLSPCPATH}/${TBLSPC}
-# if [[ -d ${TBLSPCPATH} ]]; then
-#     rm -rf ${TBLSPCPATH}
+# FLATNODESPATH=/var/lib/mod_tile
+# FLATNODESPATH=/mnt/vssd1/flat_nodes
+# if [[ ! -d ${FLATNODESPATH} ]]; then
+#     mkdir -p ${FLATNODESPATH}
 # fi
-# if [[ ! -d ${TBLSPCPATH} ]]; then
-#     mkdir -p ${TBLSPCPATH}
+# chown ${GISUSER}:${GISUSER} ${FLATNODESPATH}
+# if [[ -f ${FLATNODESPATH}/planet.cache ]]; then
+#     rm -rf ${FLATNODESPATH}/planet.cache
 # fi
-# chown vagrant:vagrant ${TBLSPCPATH}
 
 echo '##############################'
 echo '##### Stylesheet config ######'
