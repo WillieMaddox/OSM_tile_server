@@ -2,6 +2,9 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
+cp -r /vagrant/home/* .
+source .bashrc
+
 if [[ ! -d ~/src ]]; then
   mkdir ~/src
 fi
@@ -83,3 +86,4 @@ fi
 mkdir install
 cd install
 tar -xzf ../package/build/distribution/*.tgz
+

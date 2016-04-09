@@ -35,9 +35,6 @@ apt-get install -qy \
 
 apt-get install -qy postgresql postgresql-contrib postgis postgresql-9.3-postgis-2.1 python-psycopg2
 
-cp -r /vagrant/home/* /home/vagrant/
-chown -R vagrant:vagrant /home/vagrant/
-
 PG_VERSION=9.3
 PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
 PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"

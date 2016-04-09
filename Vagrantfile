@@ -91,9 +91,9 @@ Vagrant.configure(2) do |config|
 # #       :'chgrp-ignore' => true,
 # #       :'chmod-ignore' => true
 
-#     osm.vm.provision :shell, :path => "install.sh"
+    osm.vm.provision :shell, :path => "install.sh"
 #     osm.vm.provision :shell, :path => "setup_VHDs.sh"
-#     osm.vm.provision :shell, :path => "setup.sh", :privileged => false
+    osm.vm.provision :shell, :path => "setup.sh", :privileged => false
     osm.vm.provision :shell, :path => "setup2.sh"
 #     osm.vm.provision :shell, :path => "setup3.sh"
   end
