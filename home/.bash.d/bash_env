@@ -1,5 +1,0 @@
-# don't duplicate lines in the history
-export HISTCONTROL=ignoredups
-#+ and ignore same successive entries
-export HISTCONTROL=ignoreboth
-

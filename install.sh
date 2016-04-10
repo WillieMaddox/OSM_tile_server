@@ -21,7 +21,6 @@ apt-get install -qy \
   vim subversion git git-core colordiff \
   tar unzip wget bzip2 libbz2-dev \
   build-essential autoconf binutils libtool zlib1g-dev \
-  nfs-common portmap \
   gfortran make cmake g++ libblas-dev liblapack-dev libboost-all-dev \
   libffi-dev libssl-dev libexpat1-dev \
   python-dev python-setuptools python-nose python-cairo-dev \
@@ -29,11 +28,17 @@ apt-get install -qy \
   munin-node munin libdbd-pg-perl \
   libprotobuf-c0-dev protobuf-c-compiler \
   libxml2-dev libfreetype6-dev libpng12-dev libtiff4-dev libagg-dev libgeotiff-epsg \
-  libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev gdal-bin python-gdal \
-  liblua5.2-dev lua5.1 liblua5.1-dev ttf-unifont node-carto \
+  libicu-dev libgdal-dev libcairo-dev libcairomm-1.0-dev gdal-bin geotiff-bin python-gdal \
+  liblua5.2-dev lua5.1 liblua5.1-0-dev ttf-unifont node-carto \
   openjdk-7-source junit
 
+#   nfs-common portmap \
+
 apt-get install -qy postgresql postgresql-contrib postgis postgresql-9.3-postgis-2.1 python-psycopg2
+
+# set shmmax to the size of postgresql shared_buffers or 2*size.
+# echo 'kernel.shmmax=8589934592' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
+# echo 'kernel.shmmax=17179869184' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
 
 PG_VERSION=9.3
 PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
@@ -43,10 +48,6 @@ PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
 # Tuning postgresql
 
 cp /vagrant/data/mods/postgresql.conf ${PG_CONF}
-# set shmmax to the size of postgresql shared_buffers or 2*size.
-# echo 'kernel.shmmax=8589934592' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
-echo 'kernel.shmmax=17179869184' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
-sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
 sed -i "s/md5/trust/" "$PG_HBA"
 sed -i "s/peer/trust/" "$PG_HBA"
 

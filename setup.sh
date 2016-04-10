@@ -2,7 +2,8 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-cp -r /vagrant/home/* .
+cp -r /vagrant/home/bash.d  ./.bash.d
+cp -r /vagrant/home/bashrc  ./.bashrc
 source .bashrc
 
 if [[ ! -d ~/src ]]; then

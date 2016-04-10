@@ -3,6 +3,11 @@
 GISUSER=vagrant
 DB=gis
 
+PG_VERSION=9.3
+PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
+
+cp /vagrant/data/mods/postgresql.conf ${PG_CONF}
+
 cat << EOF | su - postgres -c psql
 DROP DATABASE IF EXISTS ${DB};
 CREATE DATABASE ${DB} ENCODING 'UTF8' OWNER ${GISUSER};
@@ -13,11 +18,11 @@ ALTER TABLE geometry_columns OWNER TO ${GISUSER};
 ALTER TABLE spatial_ref_sys OWNER TO ${GISUSER};
 EOF
 
-HDDTBLSPCPATH=/var/lib/postgresql/9.3/main
+VMTBLSPCPATH="/var/lib/postgresql/$PG_VERSION/main"
 
-SSDTBLSPCPATH=/mnt/vssd1
+SDBTBLSPCPATH=/mnt/vssd1
 TBLSPC=main_data
-TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${VMBTBLSPCPATH}/${TBLSPC}
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -27,9 +32,9 @@ DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
-SSDTBLSPCPATH=/mnt/vssd2
+SDBTBLSPCPATH=/mnt/vssd2
 TBLSPC=main_idx
-TBLSPCPATH=${SSDTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${VMTBLSPCPATH}/${TBLSPC}
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -39,9 +44,9 @@ DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
-SSDTBLSPCPATH=/mnt/vssd3
+SDBTBLSPCPATH=/mnt/vssd3
 TBLSPC=slim_data
-TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${VMTBLSPCPATH}/${TBLSPC}
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -51,9 +56,9 @@ DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
-SSDTBLSPCPATH=/mnt/vssd4
+SDBTBLSPCPATH=/mnt/vssd4
 TBLSPC=slim_idx
-TBLSPCPATH=${HDDTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${VMTBLSPCPATH}/${TBLSPC}
 if [[ ! -d ${TBLSPCPATH} ]]; then
     mkdir -p ${TBLSPCPATH}
 fi
@@ -63,15 +68,14 @@ DROP TABLESPACE IF EXISTS ${TBLSPC};
 CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
-# FLATNODESPATH=/var/lib/mod_tile
-# FLATNODESPATH=/mnt/vssd1/flat_nodes
-# if [[ ! -d ${FLATNODESPATH} ]]; then
-#     mkdir -p ${FLATNODESPATH}
-# fi
-# chown ${GISUSER}:${GISUSER} ${FLATNODESPATH}
-# if [[ -f ${FLATNODESPATH}/planet.cache ]]; then
-#     rm -rf ${FLATNODESPATH}/planet.cache
-# fi
+FLATNODESPATH=/mnt/vssd4/flat_nodes
+if [[ ! -d ${FLATNODESPATH} ]]; then
+    mkdir -p ${FLATNODESPATH}
+fi
+chown ${GISUSER}:${GISUSER} ${FLATNODESPATH}
+if [[ -f ${FLATNODESPATH}/planet.cache ]]; then
+    rm -rf ${FLATNODESPATH}/planet.cache
+fi
 
 echo '##############################'
 echo '##### Stylesheet config ######'
@@ -188,3 +192,4 @@ cp /vagrant/data/mods/000-default.conf /etc/apache2/sites-available/000-default.
 a2enconf mod_tile
 service apache2 reload
 
+service postgresql restart
