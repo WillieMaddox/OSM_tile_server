@@ -16,7 +16,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define "osm" do |osm|
-    osm.vm.box = "OSM-Trusty64"
+    osm.vm.box = "ubuntu/trusty64"
 #     osm.vm.box = "ubuntu-trusty64-osm120"
     osm.vm.hostname = "osm"
     osm.vm.network "private_network", ip: "172.16.5.120"
@@ -63,8 +63,8 @@ Vagrant.configure(2) do |config|
 #
 #       mem = mem / 1024 / 2
 #       vb.customize ["modifyvm", :id, "--memory", mem]
-      vb.memory = 32000
-      vb.cpus = 16
+      vb.memory = 4000
+      vb.cpus = 2
 #       unless File.exist?(disk)
 #         vb.customize ['createhd', '--filename', disk, '--size', 96 * 1024]
 #       end

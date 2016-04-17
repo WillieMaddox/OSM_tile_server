@@ -42,7 +42,7 @@ PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
 
 # Tuning postgresql
 
-cp /vagrant/data/mods/postgresql.conf ${PG_CONF}
+# cp /vagrant/data/mods/postgresql.conf ${PG_CONF}
 # echo 'kernel.shmmax=8589934592' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
 sed -i "s/md5/trust/" "$PG_HBA"

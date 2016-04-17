@@ -19,7 +19,7 @@ if [[ ! -d build ]]; then
 fi
 cd build
 cmake ..
-make -j 8
+make -j 4
 sudo make install
 
 sudo mkdir -p /tmp/psql-tablespace
@@ -47,7 +47,7 @@ git submodule update --init
 git branch 2.2 origin/2.2.x
 git checkout 2.2
 python scons/scons.py configure INPUT_PLUGINS=all OPTIMIZATION=3 SYSTEM_FONTS=/usr/share/fonts/truetype/
-make -j 8
+make -j 4
 sudo make install
 sudo ldconfig
 
@@ -62,7 +62,7 @@ else
 fi
 ./autogen.sh
 ./configure
-make -j 8
+make -j 4
 sudo make install
 sudo make install-mod_tile
 sudo ldconfig
