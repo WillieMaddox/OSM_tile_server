@@ -10,7 +10,8 @@ PLANETDIR="/vagrant/data/planet/"
 
 #####################################################
 URLBASE="http://download.geofabrik.de/north-america/us/"
-PBFFILE="alabama-latest.osm.pbf"
+# PBFFILE="alabama-latest.osm.pbf"
+PBFFILE="rhode-island-latest.osm.pbf"
 ## Date:   0330_2016_0036
 ## Nodes:         6849k
 ## Ways:           432k
