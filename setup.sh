@@ -27,7 +27,7 @@ make -j 4
 sudo make install
 
 sudo mkdir -p /tmp/psql-tablespace
-sudo /bin/chown postgres.postgres /tmp/psql-tablespace
+sudo chown postgres:postgres /tmp/psql-tablespace
 psql -c "CREATE TABLESPACE tablespacetest LOCATION '/tmp/psql-tablespace'" postgres
 
 cd tests
