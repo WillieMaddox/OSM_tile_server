@@ -200,7 +200,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/src/osmosis/install/lib
 # ############################
 # Turn on checkwinsize
 shopt -s checkwinsize
-PS1="[\u@\h \w]\\$ "
+# PS1="[\u@\h \w]\\$ "
 
 # #############################
 # set the environment
