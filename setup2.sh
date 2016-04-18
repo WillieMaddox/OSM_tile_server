@@ -4,9 +4,9 @@ GISUSER=vagrant
 DB=gis
 
 PG_VERSION=9.3
-PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
+PG_CONF="/etc/postgresql/${PG_VERSION}/main/postgresql.conf"
 
-cp /vagrant/data/mods/postgresql.conf ${PG_CONF}
+cp /vagrant/data/mods/postgresql${PG_VERSION}.conf ${PG_CONF}
 
 cat << EOF | su - postgres -c psql
 DROP DATABASE IF EXISTS ${DB};
