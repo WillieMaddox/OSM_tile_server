@@ -26,15 +26,15 @@ sudo apt-get install \
   python-dev python-setuptools python-nose python-cairo-dev \
   libgeos-dev libgeos++-dev libpq-dev libproj-dev \
   munin-node munin libdbd-pg-perl \
-  libprotobuf-c-dev protobuf-c-compiler \
-  libxml2-dev libfreetype6-dev libpng12-dev libtiff5-dev libagg-dev libgeotiff-epsg \
+  libprotobuf-c0-dev protobuf-c-compiler \
+  libxml2-dev libfreetype6-dev libpng12-dev libtiff4-dev libagg-dev libgeotiff-epsg \
   libicu-dev libgdal-dev libcairo2-dev libcairomm-1.0-dev gdal-bin geotiff-bin python-gdal \
   liblua5.2-dev lua5.1 liblua5.1-0-dev ttf-unifont node-carto \
-  openjdk-8-source junit
+  openjdk-7-source junit
 
 #   nfs-common portmap \
 
-sudo apt-get install postgresql postgresql-contrib postgis postgresql-9.5-postgis-2.2 python-psycopg2
+sudo apt-get install postgresql postgresql-contrib postgis postgresql-9.3-postgis-2.1 python-psycopg2
 
 # set shmmax to the size of postgresql shared_buffers or 2*size.
 # echo 'kernel.shmmax=8589934592' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf

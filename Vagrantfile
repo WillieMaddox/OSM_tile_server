@@ -16,10 +16,10 @@ Vagrant.configure(2) do |config|
     config.timezone.value = "US/Central"
   end
 
-  config.vm.define "osmdb" do |osm|
-    osm.vm.box = "OSMDB-Trusty64"
+  config.vm.define "osm" do |osm|
+    osm.vm.box = "OSM-Trusty64"
 #     osm.vm.box = "ubuntu-trusty64-osm120"
-    osm.vm.hostname = "osmdb"
+    osm.vm.hostname = "osm"
     osm.vm.network "private_network", ip: "172.16.5.120"
     osm.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
     osm.vm.network "forwarded_port", guest: 5432, host: 5432, auto_correct: true
@@ -64,8 +64,8 @@ Vagrant.configure(2) do |config|
 #
 #       mem = mem / 1024 / 2
 #       vb.customize ["modifyvm", :id, "--memory", mem]
-      vb.memory = 96000
-      vb.cpus = 12
+      vb.memory = 24000
+      vb.cpus = 8
 #       unless File.exist?(disk1)
 #         vb.customize ['createhd', '--filename', disk1, '--size', 50 * 1024]
 #       end
@@ -96,9 +96,9 @@ Vagrant.configure(2) do |config|
 # #       :'chgrp-ignore' => true,
 # #       :'chmod-ignore' => true
 
-#     osm.vm.provision :shell, :path => "install.sh"
+    osm.vm.provision :shell, :path => "install.sh"
 #     osm.vm.provision :shell, :path => "setup_VHDs.sh"
-#     osm.vm.provision :shell, :path => "setup.sh", :privileged => false
+    osm.vm.provision :shell, :path => "setup.sh", :privileged => false
     osm.vm.provision :shell, :path => "setup2.sh"
 #     osm.vm.provision :shell, :path => "setup3.sh"
   end
