@@ -2,6 +2,10 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
+cp -r /vagrant/home/bash.d  ./.bash.d
+cp -r /vagrant/home/bashrc  ./.bashrc
+source .bashrc
+
 if [[ ! -d ~/src ]]; then
   mkdir ~/src
 fi
@@ -19,11 +23,11 @@ if [[ ! -d build ]]; then
 fi
 cd build
 cmake ..
-make -j 8
+make -j 4
 sudo make install
 
 sudo mkdir -p /tmp/psql-tablespace
-sudo /bin/chown postgres.postgres /tmp/psql-tablespace
+sudo chown postgres:postgres /tmp/psql-tablespace
 psql -c "CREATE TABLESPACE tablespacetest LOCATION '/tmp/psql-tablespace'" postgres
 
 cd tests
@@ -47,10 +51,10 @@ git submodule update --init
 git branch 2.2 origin/2.2.x
 git checkout 2.2
 python scons/scons.py configure INPUT_PLUGINS=all OPTIMIZATION=3 SYSTEM_FONTS=/usr/share/fonts/truetype/
-make -j 8
+make -j 4
 sudo make install
 sudo ldconfig
-
+# Need to add man documentation -> man mapnik-speed-check
 
 cd ~/src
 if [ -e mod_tile ]; then 
@@ -62,11 +66,13 @@ else
 fi
 ./autogen.sh
 ./configure
-make -j 8
+make -j 4
 sudo make install
 sudo make install-mod_tile
 sudo ldconfig
 
+# cp openstreetmap-tiles-update-expire /var/lib/mod_tile
+# touch /var/lib/mod_tile/planet-import-complete
 
 cd ~/src
 if [ -e osmosis ]; then
@@ -77,3 +83,8 @@ else
   cd osmosis
 fi
 ./gradlew assemble
+
+mkdir install
+cd install
+tar -xzf ../package/build/distribution/*.tgz
+

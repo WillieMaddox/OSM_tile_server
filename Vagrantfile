@@ -7,7 +7,8 @@
 # you're doing.
 
 # disk = '/media/Borg_LS/VirtualBox VMs/OSM_tile_server_osm_1459229936301_28361/dstat-monitor.vdi'
-# disk = '/home/maddoxw/VirtualDrives/vssd96G.vdi'
+# disk1 = '/home/maddoxw/VirtualDrives/vssd50G.vdi'
+# disk2 = '/media/OSMDB/VirtualDrives/vssd800G.vdi'
 
 Vagrant.configure(2) do |config|
 
@@ -15,10 +16,10 @@ Vagrant.configure(2) do |config|
     config.timezone.value = "US/Central"
   end
 
-  config.vm.define "osm" do |osm|
-    osm.vm.box = "OSM-Trusty64"
+  config.vm.define "osmdb" do |osm|
+    osm.vm.box = "OSMDB-Trusty64"
 #     osm.vm.box = "ubuntu-trusty64-osm120"
-    osm.vm.hostname = "osm"
+    osm.vm.hostname = "osmdb"
     osm.vm.network "private_network", ip: "172.16.5.120"
     osm.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
     osm.vm.network "forwarded_port", guest: 5432, host: 5432, auto_correct: true
@@ -63,12 +64,16 @@ Vagrant.configure(2) do |config|
 #
 #       mem = mem / 1024 / 2
 #       vb.customize ["modifyvm", :id, "--memory", mem]
-      vb.memory = 32000
-      vb.cpus = 16
-#       unless File.exist?(disk)
-#         vb.customize ['createhd', '--filename', disk, '--size', 96 * 1024]
+      vb.memory = 96000
+      vb.cpus = 12
+#       unless File.exist?(disk1)
+#         vb.customize ['createhd', '--filename', disk1, '--size', 50 * 1024]
 #       end
-#       vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk]
+#       vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk1]
+#       unless File.exist?(disk2)
+#         vb.customize ['createhd', '--filename', disk2, '--size', 50 * 1024]
+#       end
+#       vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk2]
     end
 
 

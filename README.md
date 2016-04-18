@@ -37,13 +37,17 @@ htop, df, free and dstat
 
 ##Usage
 *Pre `up` instructions go here*
+
 ```
 vagrant up
 ```
+
 *Pre `provision` instructions go here*
+
 ```
 vagrant provision
 ```
+
 *Post `provision` instructions go here*
 ##TODO
 
