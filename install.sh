@@ -17,7 +17,7 @@ apt-get install -qy cachefilesd
 sed -i "s/#RUN=yes/RUN=yes/" /etc/default/cachefilesd
 service cachefilesd start
 
-sudo apt-get install \
+apt-get install -qy \
   vim subversion git git-core colordiff \
   tar unzip wget bzip2 libbz2-dev \
   build-essential autoconf binutils libtool zlib1g-dev \
@@ -26,36 +26,36 @@ sudo apt-get install \
   python-dev python-setuptools python-nose python-cairo-dev \
   libgeos-dev libgeos++-dev libpq-dev libproj-dev \
   munin-node munin libdbd-pg-perl \
-  libprotobuf-c-dev protobuf-c-compiler \
-  libxml2-dev libfreetype6-dev libpng12-dev libtiff5-dev libagg-dev libgeotiff-epsg \
+  libprotobuf-c0-dev protobuf-c-compiler \
+  libxml2-dev libfreetype6-dev libpng12-dev libtiff4-dev libagg-dev libgeotiff-epsg \
   libicu-dev libgdal-dev libcairo2-dev libcairomm-1.0-dev gdal-bin geotiff-bin python-gdal \
   liblua5.2-dev lua5.1 liblua5.1-0-dev ttf-unifont node-carto \
-  openjdk-8-source junit
+  openjdk-7-source junit
 
 #   nfs-common portmap \
 
-sudo apt-get install postgresql postgresql-contrib postgis postgresql-9.5-postgis-2.2 python-psycopg2
+apt-get install -qy postgresql postgresql-contrib postgis postgresql-9.3-postgis-2.1 python-psycopg2
 
 # set shmmax to the size of postgresql shared_buffers or 2*size.
 # echo 'kernel.shmmax=8589934592' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
 # echo 'kernel.shmmax=17179869184' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
 
-PG_VERSION=9.5
+PG_VERSION=9.3
 PG_CONF="/etc/postgresql/$PG_VERSION/main/postgresql.conf"
 PG_HBA="/etc/postgresql/$PG_VERSION/main/pg_hba.conf"
 PG_DIR="/var/lib/postgresql/$PG_VERSION/main"
 
 # Tuning postgresql
 
-# cp /vagrant/data/mods/postgresql9.5.conf ${PG_CONF}
+cp /vagrant/data/mods/postgresql${PG_VERSION}.conf ${PG_CONF}
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "$PG_CONF"
 sed -i "s/md5/trust/" "$PG_HBA"
 sed -i "s/peer/trust/" "$PG_HBA"
 
 service postgresql restart
 
-GISUSER=maddoxw
-GISPASS=maddoxw
+GISUSER=vagrant
+GISPASS=vagrant
 DB=gis
 
 ### Adding Ubuntu user
