@@ -8,65 +8,82 @@ if ! parted /dev/sdb print | grep msdos; then
     parted /dev/sdb mklabel msdos
 fi
 
-# Setup 4 different tablespaces each on their own virtual HD.
+# Setup NIDS partitions each with PER sizes.
 
-if [[ ! -b /dev/sdb1 ]]; then
-    parted /dev/sdb mkpart primary 0 25%
-    mkfs.ext4 /dev/sdb1
-fi
-if [[ ! -d /mnt/vssd1 ]]; then
-    mkdir /mnt/vssd1
-fi
-if ! grep '/dev/sdb1' /etc/fstab; then
-    echo '/dev/sdb1 /mnt/vssd1   ext4   defaults   0   0' >> /etc/fstab
-fi
-if ! grep -qs '/mnt/vssd1' /proc/mounts; then
-    mount /mnt/vssd1
-fi
+# PER0=0
+# PER1=10  # 10% pbf file
+# PER2=20  # 10% flat nodes
+# PER3=50  # 30% main-data
+# PER4=55  #  5% main-index
+# PER5=70  # 30% slim-data
+# PER6=100 # 30% slim-index
+PER=(0 10 20 50 55 70 100)
+NIDS=(1 2 3 4 5 6)
 
+for ID in ${NIDS}; do
+    if [[ ! -b /dev/sdb${ID} ]]; then
+        parted /dev/sdb mkpart primary ${PER[${ID}-1]}% ${PER[${ID}]}%
+        mkfs.ext4 /dev/sdb${ID}
+    fi
+    mkdir -p /mnt/vssd${ID}
+    if ! grep "/dev/sdb${ID}" /etc/fstab; then
+        echo "/dev/sdb${ID} /mnt/vssd${ID}   ext4   defaults   0   0" >> /etc/fstab
+    fi
+    if ! grep -qs "/mnt/vssd${ID}" /proc/mounts; then
+        mount /mnt/vssd${ID}
+    fi
+done
 
-if [[ ! -b /dev/sdb2 ]]; then
-    parted /dev/sdb mkpart primary 25% 30%
-    mkfs.ext4 /dev/sdb2
-fi
-if [[ ! -d /mnt/vssd2 ]]; then
-    mkdir /mnt/vssd2
-fi
-if ! grep '/dev/sdb2' /etc/fstab; then
-    echo '/dev/sdb2 /mnt/vssd2   ext4   defaults   0   0' >> /etc/fstab
-fi
-if ! grep -qs '/mnt/vssd2' /proc/mounts; then
-    mount /mnt/vssd2
-fi
-
-
-if [[ ! -b /dev/sdb3 ]]; then
-    parted /dev/sdb mkpart primary 30% 55%
-    mkfs.ext4 /dev/sdb3
-fi
-if [[ ! -d /mnt/vssd3 ]]; then
-    mkdir /mnt/vssd3
-fi
-if ! grep '/dev/sdb3' /etc/fstab; then
-    echo '/dev/sdb3 /mnt/vssd3   ext4   defaults   0   0' >> /etc/fstab
-fi
-if ! grep -qs '/mnt/vssd3' /proc/mounts; then
-    mount /mnt/vssd3
-fi
-
-
-if [[ ! -b /dev/sdb4 ]]; then
-    parted /dev/sdb mkpart primary 55% 100%
-    mkfs.ext4 /dev/sdb4
-fi
-if [[ ! -d /mnt/vssd4 ]]; then
-    mkdir /mnt/vssd4
-fi
-if ! grep '/dev/sdb4' /etc/fstab; then
-    echo '/dev/sdb4 /mnt/vssd4   ext4   defaults   0   0' >> /etc/fstab
-fi
-if ! grep -qs '/mnt/vssd4' /proc/mounts; then
-    mount /mnt/vssd4
-fi
+# ID=1
+# if [[ ! -b /dev/sdb${ID} ]]; then
+#     parted /dev/sdb mkpart primary ${PER[${ID}-1]}% ${PER[${ID}]}%
+#     mkfs.ext4 /dev/sdb${ID}
+# fi
+# mkdir -p /mnt/vssd${ID}
+# if ! grep "/dev/sdb${ID}" /etc/fstab; then
+#     echo "/dev/sdb${ID} /mnt/vssd${ID}   ext4   defaults   0   0" >> /etc/fstab
+# fi
+# if ! grep -qs "/mnt/vssd${ID}" /proc/mounts; then
+#     mount /mnt/vssd${ID}
+# fi
+#
+# ID=2
+# if [[ ! -b /dev/sdb${ID} ]]; then
+#     parted /dev/sdb mkpart primary ${PER[${ID}-1]}% ${PER[${ID}]}%
+#     mkfs.ext4 /dev/sdb${ID}
+# fi
+# mkdir -p /mnt/vssd${ID}
+# if ! grep "/dev/sdb${ID}" /etc/fstab; then
+#     echo "/dev/sdb${ID} /mnt/vssd${ID}   ext4   defaults   0   0" >> /etc/fstab
+# fi
+# if ! grep -qs "/mnt/vssd${ID}" /proc/mounts; then
+#     mount /mnt/vssd${ID}
+# fi
+#
+# ID=3
+# if [[ ! -b /dev/sdb${ID} ]]; then
+#     parted /dev/sdb mkpart primary ${PER[${ID}-1]}% ${PER[${ID}]}%
+#     mkfs.ext4 /dev/sdb${ID}
+# fi
+# mkdir -p /mnt/vssd${ID}
+# if ! grep "/dev/sdb${ID}" /etc/fstab; then
+#     echo "/dev/sdb${ID} /mnt/vssd${ID}   ext4   defaults   0   0" >> /etc/fstab
+# fi
+# if ! grep -qs "/mnt/vssd${ID}" /proc/mounts; then
+#     mount /mnt/vssd${ID}
+# fi
+#
+# ID=4
+# if [[ ! -b /dev/sdb${ID} ]]; then
+#     parted /dev/sdb mkpart primary ${PER[${ID}-1]}% ${PER[${ID}]}%
+#     mkfs.ext4 /dev/sdb${ID}
+# fi
+# mkdir -p /mnt/vssd${ID}
+# if ! grep "/dev/sdb${ID}" /etc/fstab; then
+#     echo "/dev/sdb${ID} /mnt/vssd${ID}   ext4   defaults   0   0" >> /etc/fstab
+# fi
+# if ! grep -qs "/mnt/vssd${ID}" /proc/mounts; then
+#     mount /mnt/vssd${ID}
+# fi
 
 
