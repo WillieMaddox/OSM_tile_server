@@ -6,11 +6,9 @@ cp -r /vagrant/home/bash.d  ./.bash.d
 cp -r /vagrant/home/bashrc  ./.bashrc
 source .bashrc
 
-if [[ ! -d ~/src ]]; then
-  mkdir ~/src
-fi
-
+mkdir -p ~/src
 cd ~/src
+
 if [ -e osm2pgsql ]; then 
   cd osm2pgsql
   git pull
@@ -18,9 +16,7 @@ else
   git clone https://github.com/openstreetmap/osm2pgsql.git
   cd osm2pgsql
 fi
-if [[ ! -d build ]]; then
-  mkdir build
-fi
+mkdir -p build
 cd build
 cmake ..
 make -j 4

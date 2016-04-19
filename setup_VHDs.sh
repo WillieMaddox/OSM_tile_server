@@ -2,12 +2,6 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
-# If this is a new virtual HD, then create an msdos partition table.
-# TODO: write a switch to use gpt partition table if hard drive > 2GB.
-if ! parted /dev/sdb print | grep msdos; then
-    parted /dev/sdb mklabel msdos
-fi
-
 # Setup NIDS partitions each with PER sizes.
 
 # PER0=0
@@ -17,20 +11,46 @@ fi
 # PER4=55  #  5% main-index
 # PER5=70  # 30% slim-data
 # PER6=100 # 30% slim-index
-PER=(0 10 20 50 55 70 100)
-NIDS=(1 2 3 4 5 6)
+PER=(0 50 100)
+NIDS=(1 2)
+DEV=sdb
+# If this is a new virtual HD, then create an msdos partition table.
+# TODO: write a switch to use gpt partition table if hard drive > 2GB.
+if ! parted /dev/${DEV} print | grep msdos; then
+    parted /dev/${DEV} mklabel msdos
+fi
+for ID in ${NIDS[@]}; do
+    if [[ ! -b /dev/${DEV}${ID} ]]; then
+        parted /dev/${DEV} mkpart primary ${PER[${ID}-1]}% ${PER[${ID}]}%
+        mkfs.ext4 /dev/${DEV}${ID}
+    fi
+    mkdir -p /mnt/${DEV}${ID}
+    if ! grep "/dev/${DEV}${ID}" /etc/fstab; then
+        echo "/dev/${DEV}${ID} /mnt/${DEV}${ID}   ext4   defaults   0   0" >> /etc/fstab
+    fi
+    if ! grep -qs "/mnt/${DEV}${ID}" /proc/mounts; then
+        mount /mnt/${DEV}${ID}
+    fi
+done
 
-for ID in ${NIDS}; do
-    if [[ ! -b /dev/sdb${ID} ]]; then
-        parted /dev/sdb mkpart primary ${PER[${ID}-1]}% ${PER[${ID}]}%
-        mkfs.ext4 /dev/sdb${ID}
+
+PER=(0 20 30 50 100)
+NIDS=(1 2 3 4)
+DEV=sdc
+if ! parted /dev/${DEV} print | grep msdos; then
+    parted /dev/${DEV} mklabel msdos
+fi
+for ID in ${NIDS[@]}; do
+    if [[ ! -b /dev/${DEV}${ID} ]]; then
+        parted /dev/${DEV} mkpart primary ${PER[${ID}-1]}% ${PER[${ID}]}%
+        mkfs.ext4 /dev/${DEV}${ID}
     fi
-    mkdir -p /mnt/vssd${ID}
-    if ! grep "/dev/sdb${ID}" /etc/fstab; then
-        echo "/dev/sdb${ID} /mnt/vssd${ID}   ext4   defaults   0   0" >> /etc/fstab
+    mkdir -p /mnt/${DEV}${ID}
+    if ! grep "/dev/${DEV}${ID}" /etc/fstab; then
+        echo "/dev/${DEV}${ID} /mnt/${DEV}${ID}   ext4   defaults   0   0" >> /etc/fstab
     fi
-    if ! grep -qs "/mnt/vssd${ID}" /proc/mounts; then
-        mount /mnt/vssd${ID}
+    if ! grep -qs "/mnt/${DEV}${ID}" /proc/mounts; then
+        mount /mnt/${DEV}${ID}
     fi
 done
 

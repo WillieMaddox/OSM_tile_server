@@ -7,8 +7,8 @@
 # you're doing.
 
 # disk = '/media/Borg_LS/VirtualBox VMs/OSM_tile_server_osm_1459229936301_28361/dstat-monitor.vdi'
-# disk1 = '/home/maddoxw/VirtualDrives/vssd50G.vdi'
-# disk2 = '/media/OSMDB/VirtualDrives/vssd800G.vdi'
+disk1 = '/media/maddoxw/OSM2/VirtualDrives/vssd100G.vdi'
+disk2 = '/media/maddoxw/OSMDB/VirtualDrives/vssd800G.vdi'
 
 Vagrant.configure(2) do |config|
 
@@ -64,16 +64,16 @@ Vagrant.configure(2) do |config|
 #
 #       mem = mem / 1024 / 2
 #       vb.customize ["modifyvm", :id, "--memory", mem]
-      vb.memory = 24000
-      vb.cpus = 8
-#       unless File.exist?(disk1)
-#         vb.customize ['createhd', '--filename', disk1, '--size', 50 * 1024]
-#       end
-#       vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk1]
-#       unless File.exist?(disk2)
-#         vb.customize ['createhd', '--filename', disk2, '--size', 50 * 1024]
-#       end
-#       vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk2]
+      vb.memory = 16000
+      vb.cpus = 12
+      unless File.exist?(disk1)
+        vb.customize ['createhd', '--filename', disk1, '--size', 100 * 1024]
+      end
+      vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk1]
+      unless File.exist?(disk2)
+        vb.customize ['createhd', '--filename', disk2, '--size', 800 * 1024]
+      end
+      vb.customize ['storageattach', :id, '--storagectl', 'SATA', '--port', 2, '--device', 0, '--type', 'hdd', '--medium', disk2]
     end
 
 
@@ -96,7 +96,7 @@ Vagrant.configure(2) do |config|
 # #       :'chgrp-ignore' => true,
 # #       :'chmod-ignore' => true
 
-    osm.vm.provision :shell, :path => "install.sh"
+#     osm.vm.provision :shell, :path => "install.sh"
 #     osm.vm.provision :shell, :path => "setup_VHDs.sh"
     osm.vm.provision :shell, :path => "setup.sh", :privileged => false
     osm.vm.provision :shell, :path => "setup2.sh"
