@@ -3,9 +3,13 @@
 GISUSER=vagrant
 DB=gis
 
-PG_VERSION=9.3
+# PG_VERSION=9.3
+PG_VERSION=`pg_config --version | sed 's/[^0-9.]*\([0-9][.][0-9]\)[.][0-9]/\1/'`
 PG_CONF="/etc/postgresql/${PG_VERSION}/main/postgresql.conf"
 
+if [[ ! -f ${PG_CONF}.orig ]]; then
+    cp ${PG_CONF} ${PG_CONF}.orig
+fi
 cp /vagrant/data/mods/postgresql${PG_VERSION}.conf ${PG_CONF}
 
 cat << EOF | su - postgres -c psql
@@ -19,7 +23,8 @@ ALTER TABLE spatial_ref_sys OWNER TO ${GISUSER};
 EOF
 
 VMTBLSPCPATH="/var/lib/postgresql/$PG_VERSION/main"
-PLANETDIR="/vagrant/data/planet"
+# PLANETDIR="/vagrant/data/planet"
+PLANETDIR="/terrain/osm/pbf"
 URLBASE="http://download.geofabrik.de/north-america"
 PBFFILE="us-south-latest.osm.pbf"
 
@@ -37,18 +42,18 @@ fi
 NIDS=(1 2)
 DEV=sdb
 
-TEMPPLANETDIR=/mnt/${DEV}1/planet
-TEMPPLANETFILE=${TEMPPLANETDIR}/${PBFFILE}
-mkdir -p ${TEMPPLANETDIR}
-chown ${GISUSER} ${TEMPPLANETDIR}
-
-if [[ ! -f ${TEMPPLANETFILE} ]]; then
-    cd ${PLANETDIR}
-    if md5sum -c ${PBFFILE}.md5 | grep OK; then
-        cp ${PLANETFILE} ${TEMPPLANETFILE}
-    fi
-    cd ~
-fi
+# TEMPPLANETDIR=/mnt/${DEV}1/planet
+# TEMPPLANETFILE=${TEMPPLANETDIR}/${PBFFILE}
+# mkdir -p ${TEMPPLANETDIR}
+# chown ${GISUSER} ${TEMPPLANETDIR}
+#
+# if [[ ! -f ${TEMPPLANETFILE} ]]; then
+#     cd ${PLANETDIR}
+#     if md5sum -c ${PBFFILE}.md5 | grep OK; then
+#         cp ${PLANETFILE} ${TEMPPLANETFILE}
+#     fi
+#     cd ~
+# fi
 
 FLATNODESPATH=/mnt/${DEV}2/flat_nodes
 mkdir -p ${FLATNODESPATH}

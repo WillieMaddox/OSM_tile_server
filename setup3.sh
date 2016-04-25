@@ -52,15 +52,15 @@ if [[ ! -f ${PLANETFILE} ]]; then
     wget ${URLFILE} -O ${PLANETFILE}
 fi
 
-MEM=`grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`
-CACHE=`echo "$MEM * 0.8" | bc`
-
+# MEM=`grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`
+# CACHE=`echo "$MEM * 0.8" | bc`
 # osm2pgsql -c -d gis -U ${GISUSER}  --number-processes 4 --slim -C ${CACHE} -k --flat-nodes /var/lib/mod_tile/planet.cache ${PLANETFILE}
+
 # --tablespace-main-data main_data --tablespace-main-index main_idx
 # --tablespace-slim-data slim_data --tablespace-slim-index slim_idx
-time osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx --tablespace-slim-data slim_data --tablespace-slim-index slim_idx /vagrant/data/planet/north-america-latest.osm.pbf
-time osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache /vagrant/data/planet/north-america-latest.osm.pbf
-time osm2pgsql -c -d gis --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
+time -p osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx --tablespace-slim-data slim_data --tablespace-slim-index slim_idx /vagrant/data/planet/north-america-latest.osm.pbf
+time -p osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache /vagrant/data/planet/north-america-latest.osm.pbf
+time -p osm2pgsql -c -d gis --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
 
 if [[ ! -d /var/run/renderd ]]; then
     mkdir /var/run/renderd
@@ -86,12 +86,12 @@ EOF
 
 render_list --all -n 4 -s /var/run/renderd/renderd.sock -z 0 -Z 7
 
-time sh -c "dd if=/dev/zero of=bigfile bs=8k count=250000 && sync"
-time dd if=bigfile of=/dev/null bs=8k
+time -p sh -c "dd if=/dev/zero of=bigfile bs=8k count=250000 && sync"
+time -p dd if=bigfile of=/dev/null bs=8k
 
 dstat -tmcd -D sda1,sdb1,sdb2,sdb3,sdb4
 for II in {1..4600}; do date; df | grep /dev/sdb; sleep 10; done
-time osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx /vagrant/data/planet/north-america-latest.osm.pbf
+time -p osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx /vagrant/data/planet/north-america-latest.osm.pbf
 
 sudo /usr/bin/install-postgis-osm-user.sh gis www-data
 if [[ ! -d /var/log/tiles ]]; then

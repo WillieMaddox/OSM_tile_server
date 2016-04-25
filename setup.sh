@@ -10,11 +10,11 @@ mkdir -p ~/src
 cd ~/src
 
 if [ -e osm2pgsql ]; then 
-  cd osm2pgsql
-  git pull
+    cd osm2pgsql
+    git pull
 else
-  git clone https://github.com/openstreetmap/osm2pgsql.git
-  cd osm2pgsql
+    git clone https://github.com/openstreetmap/osm2pgsql.git
+    cd osm2pgsql
 fi
 mkdir -p build
 cd build
@@ -37,11 +37,11 @@ sudo cp install-postgis-osm-db.sh /usr/bin/
 
 cd ~/src
 if [ -e mapnik ]; then 
-  cd mapnik
-  git pull
+    cd mapnik
+    git pull
 else
-  git clone https://github.com/mapnik/mapnik.git
-  cd mapnik
+    git clone https://github.com/mapnik/mapnik.git
+    cd mapnik
 fi
 git submodule update --init
 git branch 2.2 origin/2.2.x
@@ -54,11 +54,11 @@ sudo ldconfig
 
 cd ~/src
 if [ -e mod_tile ]; then 
-  cd mod_tile
-  git pull
+    cd mod_tile
+    git pull
 else
-  git clone https://github.com/openstreetmap/mod_tile.git
-  cd mod_tile
+    git clone https://github.com/openstreetmap/mod_tile.git
+    cd mod_tile
 fi
 ./autogen.sh
 ./configure
@@ -72,11 +72,11 @@ sudo ldconfig
 
 cd ~/src
 if [ -e osmosis ]; then
-  cd osmosis
-  git pull
+    cd osmosis
+    git pull
 else
-  git clone https://github.com/openstreetmap/osmosis.git
-  cd osmosis
+    git clone https://github.com/openstreetmap/osmosis.git
+    cd osmosis
 fi
 ./gradlew assemble
 

@@ -17,12 +17,15 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.define "osm" do |osm|
-    osm.vm.box = "OSM-Trusty64"
+#     osm.vm.box = "OSM-Trusty64"
+#     osm.vm.box = "ubuntu/xenial64"
+    osm.vm.box = "gbarbieru/xenial"
 #     osm.vm.box = "ubuntu-trusty64-osm120"
     osm.vm.hostname = "osm"
     osm.vm.network "private_network", ip: "172.16.5.120"
     osm.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
     osm.vm.network "forwarded_port", guest: 5432, host: 5432, auto_correct: true
+    osm.vm.synced_folder "/media/Borg_LS/terrain", "/terrain"
 
 #     osm.vm.synced_folder '.', '/vagrant',
 #       :nfs => true,
@@ -64,8 +67,8 @@ Vagrant.configure(2) do |config|
 #
 #       mem = mem / 1024 / 2
 #       vb.customize ["modifyvm", :id, "--memory", mem]
-      vb.memory = 16000
-      vb.cpus = 12
+      vb.memory = 120000
+      vb.cpus = 20
       unless File.exist?(disk1)
         vb.customize ['createhd', '--filename', disk1, '--size', 100 * 1024]
       end
@@ -97,7 +100,7 @@ Vagrant.configure(2) do |config|
 # #       :'chmod-ignore' => true
 
 #     osm.vm.provision :shell, :path => "install.sh"
-#     osm.vm.provision :shell, :path => "setup_VHDs.sh"
+    osm.vm.provision :shell, :path => "setup_VHDs.sh"
     osm.vm.provision :shell, :path => "setup.sh", :privileged => false
     osm.vm.provision :shell, :path => "setup2.sh"
 #     osm.vm.provision :shell, :path => "setup3.sh"
