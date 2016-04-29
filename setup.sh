@@ -29,7 +29,7 @@ psql -c "CREATE TABLESPACE tablespacetest LOCATION '/tmp/psql-tablespace'" postg
 cd tests
 make -j 4
 cd ../
-make test
+# make test
 cd ../
 sudo cp install-postgis-osm-user.sh /usr/bin/
 sudo cp install-postgis-osm-db.sh /usr/bin/

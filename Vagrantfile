@@ -19,10 +19,11 @@ Vagrant.configure(2) do |config|
   config.vm.define "osm" do |osm|
 #     osm.vm.box = "OSM-Trusty64"
 #     osm.vm.box = "ubuntu/xenial64"
-    osm.vm.box = "gbarbieru/xenial"
+#     osm.vm.box = "gbarbieru/xenial"
+    osm.vm.box = "osm-xenial64"
 #     osm.vm.box = "ubuntu-trusty64-osm120"
     osm.vm.hostname = "osm"
-    osm.vm.network "private_network", ip: "172.16.5.120"
+#     osm.vm.network "private_network", ip: "172.16.5.120"
     osm.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
     osm.vm.network "forwarded_port", guest: 5432, host: 5432, auto_correct: true
     osm.vm.synced_folder "/media/Borg_LS/terrain", "/terrain"
@@ -100,8 +101,8 @@ Vagrant.configure(2) do |config|
 # #       :'chmod-ignore' => true
 
 #     osm.vm.provision :shell, :path => "install.sh"
-    osm.vm.provision :shell, :path => "setup_VHDs.sh"
-    osm.vm.provision :shell, :path => "setup.sh", :privileged => false
+#     osm.vm.provision :shell, :path => "setup.sh", :privileged => false
+#     osm.vm.provision :shell, :path => "setup_VHDs.sh"
     osm.vm.provision :shell, :path => "setup2.sh"
 #     osm.vm.provision :shell, :path => "setup3.sh"
   end

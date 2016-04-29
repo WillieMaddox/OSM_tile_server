@@ -54,6 +54,7 @@ fi
 
 # MEM=`grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`
 # CACHE=`echo "$MEM * 0.8" | bc`
+# CACHE 8 bytes * number of nodes / efficiency, where efficiency is 50% for small extracts, 80% for full planet
 # osm2pgsql -c -d gis -U ${GISUSER}  --number-processes 4 --slim -C ${CACHE} -k --flat-nodes /var/lib/mod_tile/planet.cache ${PLANETFILE}
 
 # --tablespace-main-data main_data --tablespace-main-index main_idx

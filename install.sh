@@ -6,14 +6,12 @@ UBUNTU_VERSION=`lsb_release -sc`
 apt-get update
 apt-get upgrade -qy
 
-apt-get install -qy htop dstat sysstat parted
+apt-get install -qy htop dstat sysstat parted git git-core
 
 apt-get install -qy apache2 apache2-dev apache2-utils apache2-dbg
-
 if ! grep "gis.local.osm" /etc/hosts; then
     sed -i "s/127.0.0.1 localhost/127.0.0.1 localhost gis.local.osm/" /etc/hosts
 fi
-
 echo "ServerName gis.local.osm" > /etc/apache2/conf-available/local-servername.conf
 a2enconf local-servername
 service apache2 restart
@@ -23,33 +21,38 @@ sed -i "s/#RUN=yes/RUN=yes/" /etc/default/cachefilesd
 service cachefilesd start
 
 apt-get install -qy \
-  vim subversion git git-core colordiff \
-  tar unzip wget bzip2 libbz2-dev \
+  vim colordiff tar unzip wget bzip2 libbz2-dev \
   build-essential autoconf binutils libtool zlib1g-dev \
   gfortran make cmake g++ libblas-dev liblapack-dev libboost-all-dev \
   libffi-dev libssl-dev libexpat1-dev \
   python-dev python-setuptools python-nose python-cairo-dev \
   libgeos-dev libgeos++-dev libpq-dev libproj-dev \
-  munin-node munin libdbd-pg-perl \
-  libprotobuf-c0-dev protobuf-c-compiler \
-  libxml2-dev libfreetype6-dev libpng12-dev libagg-dev libgeotiff-epsg \
-  libicu-dev libgdal-dev libcairo2-dev libcairomm-1.0-dev gdal-bin geotiff-bin python-gdal \
-  liblua5.2-dev lua5.1 liblua5.1-0-dev ttf-unifont node-carto \
-  junit
+  libdbd-pg-perl protobuf-c-compiler \
+  libxml2-dev libfreetype6-dev libpng12-dev libagg-dev \
+  libicu-dev libcairo2-dev libcairomm-1.0-dev libgeotiff-epsg geotiff-bin \
+  liblua5.2-dev lua5.1 liblua5.1-0-dev ttf-unifont
 
-# Trusty
 case ${UBUNTU_VERSION} in
     'trusty' )
         apt-get install -qy \
+        libprotobuf-c0-dev \
         libtiff4-dev \
-        openjdk-7-source
+        openjdk-7-source junit
+        ;;
     'xenial' )
         apt-get install -qy \
+        libprotobuf-c-dev \
         libtiff5-dev \
-        openjdk-8-source
+        openjdk-8-source junit
+        ;;
 esac
 
-#   nfs-common portmap \
+apt-get install -qy libgdal-dev gdal-bin python-gdal
+
+apt-get install -qy node-carto
+# apt-get install -qy nfs-common portmap
+
+apt-get install -qy munin-node munin
 
 apt-get install -qy postgresql postgresql-contrib postgis python-psycopg2
 
