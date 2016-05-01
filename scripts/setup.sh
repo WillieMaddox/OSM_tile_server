@@ -31,6 +31,9 @@ make -j 4
 cd ../
 # make test
 cd ../
+
+psql -c "DROP TABLESPACE tablespacetest" postgres
+
 sudo cp install-postgis-osm-user.sh /usr/bin/
 sudo cp install-postgis-osm-db.sh /usr/bin/
 

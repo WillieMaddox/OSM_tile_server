@@ -90,9 +90,9 @@ render_list --all -n 4 -s /var/run/renderd/renderd.sock -z 0 -Z 7
 time -p sh -c "dd if=/dev/zero of=bigfile bs=8k count=250000 && sync"
 time -p dd if=bigfile of=/dev/null bs=8k
 
-dstat -tmcd -D sda1,sdb1,sdb2,sdb3,sdb4
-for II in {1..4600}; do date; df | grep /dev/sdb; sleep 10; done
-time -p osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx /vagrant/data/planet/north-america-latest.osm.pbf
+dstat -tmclgd -D sda1,sdb7,sdb8,sdbc,sdc2,sdc3,sdc4 --output dstat.txt 5
+touch pg_xlog.txt; for I in {1..17280}; do printf %s "$(date)" >> pg_xlog.txt; sudo du /media/OSM070/pg_xlog | tail -1 | sed "s/\/.*//" >> pg_xlog.txt; sleep 5; done
+touch df.txt; for II in {1..17280}; do date >> df.log; df | sort | grep /dev/sd >> df.log; sleep 5; done
 
 sudo /usr/bin/install-postgis-osm-user.sh gis www-data
 if [[ ! -d /var/log/tiles ]]; then
