@@ -1,115 +1,15 @@
 #!/usr/bin/env bash
 
 GISUSER=vagrant
+SRCDIR=/vagrant
+
 DB=gis
-
-# PG_VERSION=9.3
-PG_VERSION=`pg_config --version | sed 's/[^0-9.]*\([0-9][.][0-9]\)[.][0-9]*/\1/'`
-PG_CONF="/etc/postgresql/${PG_VERSION}/main/postgresql.conf"
-
-if [[ ! -f ${PG_CONF}.orig ]]; then
-    cp ${PG_CONF} ${PG_CONF}.orig
-fi
-cp /vagrant/data/mods/postgresql${PG_VERSION}.conf ${PG_CONF}
-
-cat << EOF | su - postgres -c psql
-DROP DATABASE IF EXISTS ${DB};
-CREATE DATABASE ${DB} ENCODING 'UTF8' OWNER ${GISUSER};
-\c ${DB}
-CREATE EXTENSION postgis;
-CREATE EXTENSION hstore;
-ALTER TABLE geometry_columns OWNER TO ${GISUSER};
-ALTER TABLE spatial_ref_sys OWNER TO ${GISUSER};
-EOF
-
-VMTBLSPCPATH="/var/lib/postgresql/$PG_VERSION/main"
-# PLANETDIR="/vagrant/data/planet"
-PLANETDIR="/terrain/osm/pbf"
-URLBASE="http://download.geofabrik.de/north-america"
-PBFFILE="us-south-latest.osm.pbf"
-
-PLANETFILE=${PLANETDIR}/${PBFFILE}
-URLFILE=${URLBASE}/${PBFFILE}
-
-mkdir -p ${PLANETDIR}
-chown ${GISUSER} ${PLANETDIR}
-
-if [[ ! -f ${PLANETFILE} ]]; then
-    wget ${URLFILE} -O ${PLANETFILE}
-    wget ${URLFILE}.md5 -O ${PLANETFILE}.md5
-fi
-
-NIDS=(1 2)
-DEV=sdb
-
-# TEMPPLANETDIR=/mnt/${DEV}1/planet
-# TEMPPLANETFILE=${TEMPPLANETDIR}/${PBFFILE}
-# mkdir -p ${TEMPPLANETDIR}
-# chown ${GISUSER} ${TEMPPLANETDIR}
-#
-# if [[ ! -f ${TEMPPLANETFILE} ]]; then
-#     cd ${PLANETDIR}
-#     if md5sum -c ${PBFFILE}.md5 | grep OK; then
-#         cp ${PLANETFILE} ${TEMPPLANETFILE}
-#     fi
-#     cd ~
-# fi
-
-FLATNODESPATH=/mnt/${DEV}2/flat_nodes
-mkdir -p ${FLATNODESPATH}
-chown ${GISUSER}:${GISUSER} ${FLATNODESPATH}
-if [[ -f ${FLATNODESPATH}/planet.cache ]]; then
-    rm -rf ${FLATNODESPATH}/planet.cache
-fi
-
-NIDS=(1 2 3 4)
-DEV=sdc
-
-SDBTBLSPCPATH=/mnt/${DEV}1
-TBLSPC=main_data
-TBLSPCPATH=${SDBTBLSPCPATH}/${TBLSPC}
-mkdir -p ${TBLSPCPATH}
-chown postgres:postgres ${TBLSPCPATH}
-cat << EOF | su - postgres -c psql
-DROP TABLESPACE IF EXISTS ${TBLSPC};
-CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
-EOF
-
-SDBTBLSPCPATH=/mnt/${DEV}2
-TBLSPC=main_idx
-TBLSPCPATH=${SDBTBLSPCPATH}/${TBLSPC}
-mkdir -p ${TBLSPCPATH}
-chown postgres:postgres ${TBLSPCPATH}
-cat << EOF | su - postgres -c psql
-DROP TABLESPACE IF EXISTS ${TBLSPC};
-CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
-EOF
-
-SDBTBLSPCPATH=/mnt/${DEV}3
-TBLSPC=slim_data
-TBLSPCPATH=${SDBTBLSPCPATH}/${TBLSPC}
-mkdir -p ${TBLSPCPATH}
-chown postgres:postgres ${TBLSPCPATH}
-cat << EOF | su - postgres -c psql
-DROP TABLESPACE IF EXISTS ${TBLSPC};
-CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
-EOF
-
-SDBTBLSPCPATH=/mnt/${DEV}4
-TBLSPC=slim_idx
-TBLSPCPATH=${SDBTBLSPCPATH}/${TBLSPC}
-mkdir -p ${TBLSPCPATH}
-chown postgres:postgres ${TBLSPCPATH}
-cat << EOF | su - postgres -c psql
-DROP TABLESPACE IF EXISTS ${TBLSPC};
-CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
-EOF
 
 echo '##############################'
 echo '##### Stylesheet config ######'
 echo '##############################'
 
-ZIPSDIR=/vagrant/data/zips
+ZIPSDIR=${SRCDIR}/data/zips
 mkdir -p ${ZIPSDIR}
 cd ${ZIPSDIR}
 
@@ -131,7 +31,7 @@ fi
 
 STYLEDIR="/usr/local/share/maps/style"
 mkdir -p ${STYLEDIR}
-sudo chown -R ${GISUSER} ${STYLEDIR}
+chown -R ${GISUSER} ${STYLEDIR}
 
 cd ${STYLEDIR}
 
@@ -164,7 +64,7 @@ fi
 
 cd ${STYLEDIR}/osm-bright-master/osm-bright
 rm osm-bright.osm2pgsql.mml
-cp /vagrant/data/mods/osm-bright.osm2pgsql.mml .
+cp ${SRCDIR}/data/mods/osm-bright.osm2pgsql.mml .
 cd ../
 
 # Compiling the stylesheet
@@ -177,30 +77,30 @@ sed -i "s|\"osm\"|\"${DB}\"|" configure.py
 cd ${STYLEDIR}/OSMBright
 carto project.mml > OSMBright.xml
 
-sudo chown -R ${GISUSER} ${STYLEDIR}
+chown -R ${GISUSER} ${STYLEDIR}
 
 echo '##############################'
-echo '## Setting up your webserver #'
+echo '## Setting up the webserver ##'
 echo '##############################'
 
 # Move Openlayers scripts to apache dir.
 
-cp -r /vagrant/webapp/aspe_ol3_test/* /var/www/html/
+cp -r ${SRCDIR}/webapp/aspe_ol3_test/* /var/www/html/
 chown -R www-data /var/www/html/*
 
 # Configure renderd
 
 mkdir -p /var/run/renderd
 chown ${GISUSER} /var/run/renderd
-cp /vagrant/data/mods/renderd.conf /usr/local/etc/renderd.conf
+cp ${SRCDIR}/data/mods/renderd.conf /usr/local/etc/renderd.conf
 
 # Configure mod_tile
 
 mkdir -p /var/lib/mod_tile
-chown vagrant:vagrant /var/lib/mod_tile
+chown ${GISUSER}:${GISUSER} /var/lib/mod_tile
 
 echo "LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so" > /etc/apache2/conf-available/mod_tile.conf
-cp /vagrant/data/mods/000-default.conf /etc/apache2/sites-available/000-default.conf
+cp ${SRCDIR}/data/mods/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 a2enconf mod_tile
 service apache2 reload
