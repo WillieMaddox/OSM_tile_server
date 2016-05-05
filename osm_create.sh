@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 GISUSER=maddoxw
+SRCDIR=/home/${GISUSER}/PycharmProjects/OSM_tile_server
+
 DB=gis
 
 PG_VERSION=`pg_config --version | sed 's/[^0-9.]*\([0-9][.][0-9]\)[.][0-9]*/\1/'`
@@ -9,7 +11,7 @@ PG_CONF="/etc/postgresql/${PG_VERSION}/main/postgresql.conf"
 if [[ ! -f ${PG_CONF}.orig ]]; then
     cp ${PG_CONF} ${PG_CONF}.orig
 fi
-cp /vagrant/data/mods/postgresql${PG_VERSION}.conf ${PG_CONF}
+cp ${SRCDIR}/data/mods/postgresql${PG_VERSION}.conf ${PG_CONF}
 
 cat << EOF | su - postgres -c psql
 DROP DATABASE IF EXISTS ${DB};
@@ -37,7 +39,6 @@ if [[ ! -L /var/lib/postgresql/${PG_VERSION}/main/pg_xlog ]]; then
     ln -s ${PGXLOGPATH}/pg_xlog /var/lib/postgresql/${PG_VERSION}/main/pg_xlog
     chown -R postgres:postgres /var/lib/postgresql/${PG_VERSION}/main/pg_xlog
     chmod 700 /var/lib/postgresql/${PG_VERSION}/main/pg_xlog
-
 fi
 
 SDBTBLSPCPATH=/media/OSM300
