@@ -103,7 +103,8 @@ Vagrant.configure(2) do |config|
 #     osm.vm.provision :shell, :path => "scripts/install.sh"
 #     osm.vm.provision :shell, :path => "scripts/setup.sh", :privileged => false
 #     osm.vm.provision :shell, :path => "scripts/setup_VHDs.sh"
-    osm.vm.provision :shell, :path => "scripts/setup2.sh"
+#     osm.vm.provision :shell, :path => "scripts/setup_postgres.sh"
+#     osm.vm.provision :shell, :path => "scripts/setup2.sh"
 #     osm.vm.provision :shell, :path => "scripts/setup3.sh"
   end
 end

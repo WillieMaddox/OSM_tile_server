@@ -59,25 +59,14 @@ fi
 
 # --tablespace-main-data main_data --tablespace-main-index main_idx
 # --tablespace-slim-data slim_data --tablespace-slim-index slim_idx
-echo `date`; time -p osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx --tablespace-slim-data slim_data --tablespace-slim-index slim_idx /vagrant/data/planet/north-america-latest.osm.pbf
-time -p osm2pgsql -c -d gis -U vagrant --number-processes 4 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache /vagrant/data/planet/north-america-latest.osm.pbf
-time -p osm2pgsql -c -d gis --number-processes 4 /vagrant/data/planet/alabama-latest.osm.pbf
-
-if [[ ! -d /var/run/renderd ]]; then
-    mkdir /var/run/renderd
-fi
-chown ${GISUSER} /var/run/renderd
-
-# sudo install-postgis-osm-user.sh gis www-data
-# sudo ln -s /home/vagrant/src/mod_tile/munin/* /etc/munin/plugins/
-# sudo chmod a+x /home/vagrant/src/mod_tile/munin/*
-# sudo munin-node-configure --shell | sudo sh
+echo `date`; time -p osm2pgsql -c -d gis -U vagrant --number-processes 12 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx --tablespace-slim-data slim_data --tablespace-slim-index slim_idx /vagrant/data/planet/planet-latest.osm.pbf
 
 sudo -u ${GISUSER} renderd -f -c /usr/local/etc/renderd.conf
 sudo -u vagrant renderd -f -c /usr/local/etc/renderd.conf
 # Then restart apache in another terminal.
 sudo service apache2 restart
 
+# Run after osm2pgsql
 cat << EOF | su - postgres -c ${DB}
 ALTER TABLE public.planet_osm_ways SET (autovacuum_vacuum_scale_factor = 0.0);
 ALTER TABLE public.planet_osm_ways SET (autovacuum_vacuum_threshold = 5000);
@@ -91,8 +80,11 @@ time -p sh -c "dd if=/dev/zero of=bigfile bs=8k count=250000 && sync"
 time -p dd if=bigfile of=/dev/null bs=8k
 
 dstat -tmclgd -D sda1,sdb7,sdb8,sdbc,sdc2,sdc3,sdc4 --output dstat.txt 5
-touch pg_xlog.txt; for I in {1..17280}; do printf %s "$(date)" >> pg_xlog.txt; sudo du /media/OSM070/pg_xlog | tail -1 | sed "s/\/.*//" >> pg_xlog.txt; sleep 5; done
-touch df.txt; for II in {1..17280}; do date >> df.log; df | sort | grep /dev/sd >> df.log; sleep 5; done
+
+# sudo install-postgis-osm-user.sh gis www-data
+# sudo ln -s /home/vagrant/src/mod_tile/munin/* /etc/munin/plugins/
+# sudo chmod a+x /home/vagrant/src/mod_tile/munin/*
+# sudo munin-node-configure --shell | sudo sh
 
 sudo /usr/bin/install-postgis-osm-user.sh gis www-data
 if [[ ! -d /var/log/tiles ]]; then
