@@ -27,7 +27,7 @@ apt-get install -qy \
   libffi-dev libssl-dev libexpat1-dev \
   python-dev python-setuptools python-nose python-cairo-dev \
   libgeos-dev libgeos++-dev libpq-dev libproj-dev \
-  libdbd-pg-perl protobuf-c-compiler \
+  libdbd-pg-perl protobuf-c-compiler librasterlite-dev \
   libxml2-dev libfreetype6-dev libpng12-dev libagg-dev \
   libicu-dev libcairo2-dev libcairomm-1.0-dev libgeotiff-epsg geotiff-bin \
   liblua5.2-dev lua5.1 liblua5.1-0-dev ttf-unifont
