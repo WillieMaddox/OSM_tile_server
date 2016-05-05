@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-
-
 SLEEP=5
 II=17280
 NN=(0 1 2 3 4)
