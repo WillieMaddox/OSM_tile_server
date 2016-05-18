@@ -70,8 +70,8 @@ sudo make install
 sudo make install-mod_tile
 sudo ldconfig
 
-cp openstreetmap-tiles-update-expire /usr/bin/
-cp osmosis-db_replag /usr/bin/
+sudo cp openstreetmap-tiles-update-expire /usr/bin/
+sudo cp osmosis-db_replag /usr/bin/
 # touch /var/lib/mod_tile/planet-import-complete
 
 cd ~/src

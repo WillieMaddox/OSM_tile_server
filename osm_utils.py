@@ -50,42 +50,38 @@ def dstat_format_func(keys, x, st=None):
         return float(x)
 
 
-def read_dstat(filename, start_time):
-    dstatdict = {}
+def read_osm2pgsql(filename):
+    osm2pgsqldict = {}
     with open(filename) as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
+        row = reader.next()
+        assert row[0].lower() == 'i_flag'
+        has_parallel_indexing = row[1].lower() == 'true'
+        row = reader.next()
+        dt0 = datetime.strptime(row[1], "%a %b %d %H:%M:%S %Z %Y")
+        osm2pgsqldict[row[0]] = dt0
+        dt = dt0
 
-        # Skip the first five lines
-        reader.next()
-        reader.next()
-        reader.next()
-        reader.next()
-        reader.next()
+        for _ in range(4):
+            row = reader.next()
+            dt += timedelta(seconds=float(row[1]))
+            osm2pgsqldict[row[0]] = dt
 
-        # lines 6 and 7 contain the header information
-        header0 = reader.next()
-        header1 = reader.next()
-        headers = []
-        for i, (hh, h1) in enumerate(zip(header0, header1)):
-            if hh != '':
-                h0 = hh
-                if h0 not in dstatdict:
-                    dstatdict[h0] = {}
-                if h1 not in dstatdict[h0]:
-                    dstatdict[h0][h1] = []
-            else:
-                dstatdict[h0][h1] = []
-            if h1 == "time":
-                time_col = i
-            headers.append([h0, h1])
-
-        for row in reader:
-            for i, col in enumerate(row):
-                if i == time_col:
-                    dstatdict[headers[i][0]][headers[i][1]].append(dstat_format_func(headers[i], col, st=start_time))
-                else:
-                    dstatdict[headers[i][0]][headers[i][1]].append(dstat_format_func(headers[i], col))
-    return dstatdict
+        if has_parallel_indexing:
+            for row in reader:
+                dt += timedelta(seconds=float(row[1]))
+                osm2pgsqldict[row[0]] = dt
+            osm2pgsqldict.pop('result', None)
+        else:
+            temp_dict = {}
+            for row in reader:
+                if row[0].startswith('#'):
+                    continue
+                temp_dict[row[0]] = float(row[1])
+            osm2pgsqldict['result'] = dt0 + timedelta(seconds=temp_dict['result'])
+            osm2pgsqldict['planet_osm_rels'] = osm2pgsqldict['result'] - timedelta(seconds=temp_dict['planet_osm_rels'])
+            osm2pgsqldict['planet_osm_ways'] = osm2pgsqldict['planet_osm_rels'] - timedelta(seconds=temp_dict['planet_osm_ways'])
+    return osm2pgsqldict
 
 
 def read_df(filename, start_time):
@@ -140,59 +136,49 @@ def read_du(filename, start_time):
     return dudict
 
 
-def read_osm2pgsql(filename):
-    osm2pgsqldict = {}
+def read_dstat(filename, start_time):
+    dstatdict = {}
     with open(filename) as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
-        row = reader.next()
-        assert row[0].lower() == 'i_flag'
-        has_parallel_indexing = row[1].lower() == 'true'
-        row = reader.next()
-        dt0 = datetime.strptime(row[1], "%a %b %d %H:%M:%S %Z %Y")
-        osm2pgsqldict[row[0]] = dt0
-        dt = dt0
 
-        for _ in range(4):
-            row = reader.next()
-            dt += timedelta(seconds=float(row[1]))
-            osm2pgsqldict[row[0]] = dt
+        # Skip the first five lines
+        reader.next()
+        reader.next()
+        reader.next()
+        reader.next()
+        reader.next()
 
-        if has_parallel_indexing:
-            for row in reader:
-                dt += timedelta(seconds=float(row[1]))
-                osm2pgsqldict[row[0]] = dt
-            osm2pgsqldict.pop('result', None)
-        else:
-            temp_dict = {}
-            for row in reader:
-                if row[0].startswith('#'):
-                    continue
-                temp_dict[row[0]] = float(row[1])
-            osm2pgsqldict['result'] = dt0 + timedelta(seconds=temp_dict['result'])
-            osm2pgsqldict['planet_osm_rels'] = osm2pgsqldict['result'] - timedelta(seconds=temp_dict['planet_osm_rels'])
-            osm2pgsqldict['planet_osm_ways'] = osm2pgsqldict['planet_osm_rels'] - timedelta(seconds=temp_dict['planet_osm_ways'])
-    return osm2pgsqldict
+        # lines 6 and 7 contain the header information
+        header0 = reader.next()
+        header1 = reader.next()
+        headers = []
+        for i, (hh, h1) in enumerate(zip(header0, header1)):
+            if hh != '':
+                h0 = hh
+                if h0 not in dstatdict:
+                    dstatdict[h0] = {}
+                if h1 not in dstatdict[h0]:
+                    dstatdict[h0][h1] = []
+            else:
+                dstatdict[h0][h1] = []
+            if h1 == "time":
+                time_col = i
+            headers.append([h0, h1])
+
+        for row in reader:
+            for i, col in enumerate(row):
+                if i == time_col:
+                    dstatdict[headers[i][0]][headers[i][1]].append(dstat_format_func(headers[i], col, st=start_time))
+                else:
+                    dstatdict[headers[i][0]][headers[i][1]].append(dstat_format_func(headers[i], col))
+    return dstatdict
 
 
-run_idx = 'benchmarks/f07'
+run_idx = 'benchmarks/f10'
 
 osm2pgsql_file = run_idx+'/osm2pgsql.txt'
 osm2pgsql_dict = read_osm2pgsql(osm2pgsql_file)
 start_time = osm2pgsql_dict['Start time']
-
-dstat_file = run_idx+'/dstat.txt'
-if os.path.exists(dstat_file):
-    dstat_dict = read_dstat(dstat_file, start_time)
-    # dstat_dates = date2num(dstat_dict['system']['time'])
-else:
-    dstat_dict = None
-
-du_file = run_idx+'/du.txt'
-if os.path.exists(du_file):
-    du_dict = read_du(du_file, start_time)
-    # du_dates = date2num(du_dict['time'])
-else:
-    du_dict = None
 
 df_file = run_idx+'/df.txt'
 if os.path.exists(df_file):
@@ -201,12 +187,27 @@ if os.path.exists(df_file):
 else:
     df_dict = None
 
-ymaxs = [250, 500, 250, 250, 250, 128, 100, 16, 20]
+du_file = run_idx+'/du.txt'
+if os.path.exists(du_file):
+    du_dict = read_du(du_file, start_time)
+    # du_dates = date2num(du_dict['time'])
+else:
+    du_dict = None
+
+dstat_file = run_idx+'/dstat.txt'
+if os.path.exists(dstat_file):
+    dstat_dict = read_dstat(dstat_file, start_time)
+    # dstat_dates = date2num(dstat_dict['system']['time'])
+else:
+    dstat_dict = None
+
+ymaxs = [250, 500, 250, 250, 250, 128, 100, 25, 20]
 fig, ax = plt.subplots(len(ymaxs), sharex=True, figsize=(16, 10))
 
 if df_dict is not None:
-    ax[0].plot(df_dict['datetime'], df_dict['/dev/sdb8'], 'r-', lw=1)
-    ax[0].plot(df_dict['datetime'], df_dict['/dev/sdb6'], 'g-', lw=2)
+    if 'dsk/sdb8' in dstat_dict:
+        ax[0].plot(df_dict['datetime'], df_dict['/dev/sdb8'], 'r-', lw=1)
+        ax[0].plot(df_dict['datetime'], df_dict['/dev/sdb6'], 'g-', lw=2)
 
 if dstat_dict is not None:
     if 'dsk/sdc1' in dstat_dict:
@@ -226,7 +227,7 @@ if df_dict is not None:
     if 'dsk/sdc2' in dstat_dict:
         ax[2].plot(df_dict['datetime'], df_dict['/dev/sdc2'], 'g-', lw=2)
 if du_dict is not None:
-    ax[2].plot(du_dict['time'], du_dict['main_idx'], 'k-', lw=2)
+    ax[2].plot(du_dict['time'], du_dict['main_index'], 'k-', lw=2)
 
 if dstat_dict is not None:
     if 'dsk/sdc3' in dstat_dict:
@@ -246,7 +247,7 @@ if df_dict is not None:
     if 'dsk/sdc4' in dstat_dict:
         ax[4].plot(df_dict['datetime'], df_dict['/dev/sdc4'], 'g-', lw=2)
 if du_dict is not None:
-    ax[4].plot(du_dict['time'], du_dict['slim_idx'], 'k-', lw=2)
+    ax[4].plot(du_dict['time'], du_dict['slim_index'], 'k-', lw=2)
 
 if dstat_dict is not None:
     ax[5].plot(dstat_dict['system']['time'], dstat_dict['memory usage']['used'], 'g-', lw=2)
@@ -281,7 +282,7 @@ for i, ymax in enumerate(ymaxs):
         value = value - start_time
         ax[i].vlines(value.total_seconds(), 0, ymax, label=key)
         ax[i].set_ylim([0, ymax])
-        ax[i].set_xlim([-300, 70000])
+        ax[i].set_xlim([-300, 72000])
 
 fig.subplots_adjust(hspace=0)
 plt.setp([a.get_xticklabels() for a in fig.axes[:-1]], visible=False)

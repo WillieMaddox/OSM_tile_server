@@ -85,8 +85,8 @@ echo '##############################'
 
 # Move Openlayers scripts to apache dir.
 
-cp -r ${SRCDIR}/webapp/aspe_ol3_test/* /var/www/html/
-chown -R www-data /var/www/html/*
+cp -r ${SRCDIR}/webapp/aspe_ol3_test/* /var/www/
+chown -R www-data /var/www/*
 
 # Configure renderd
 
