@@ -74,12 +74,12 @@ ALTER TABLE public.planet_osm_ways SET (autovacuum_analyze_scale_factor = 0.0);
 ALTER TABLE public.planet_osm_ways SET (autovacuum_analyze_threshold = 5000);
 EOF
 
-render_list --all -n 4 -s /var/run/renderd/renderd.sock -z 0 -Z 7
+render_list --all -n 8 -s /var/run/renderd/renderd.sock -z 0 -Z 7
 
 time -p sh -c "dd if=/dev/zero of=bigfile bs=8k count=250000 && sync"
 time -p dd if=bigfile of=/dev/null bs=8k
 
-dstat -tmscglnd -D sda1,sdb7,sdb8,sdbc,sdc2,sdc3,sdc4 --output dstat.txt 5
+dstat -tmsclgd -D sda1,sdb6,sdb8,sdc1,sdc2,sdc3,sdc4 --output dstat.txt 5
 
 # sudo install-postgis-osm-user.sh gis www-data
 # sudo ln -s /home/vagrant/src/mod_tile/munin/* /etc/munin/plugins/

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 GISUSER=vagrant
+SRCDIR=/vagrant
+
 DB=gis
 
 PG_VERSION=`pg_config --version | sed 's/[^0-9.]*\([0-9][.][0-9]\)[.][0-9]*/\1/'`
@@ -9,7 +11,7 @@ PG_CONF="/etc/postgresql/${PG_VERSION}/main/postgresql.conf"
 if [[ ! -f ${PG_CONF}.orig ]]; then
     cp ${PG_CONF} ${PG_CONF}.orig
 fi
-cp /vagrant/data/mods/postgresql${PG_VERSION}.conf ${PG_CONF}
+cp ${SRCDIR}/data/mods/postgresql${PG_VERSION}.conf ${PG_CONF}
 
 cat << EOF | su - postgres -c psql
 DROP DATABASE IF EXISTS ${DB};

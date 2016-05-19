@@ -1,0 +1,13 @@
+I_flag,True
+Start time,Sat May 7 21:55:15 CDT 2016
+Node time,1279
+Way time,4079
+Relation time,16119
+pending ways time,4078
+planet_osm_point,2422
+planet_osm_line,5048
+planet_osm_polygon,11030
+planet_osm_roads,426
+planet_osm_ways,18250
+planet_osm_rels,110
+result,62877
