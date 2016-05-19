@@ -2,13 +2,13 @@
 
 
 
-SLEEP=5
+SLEEP=10
 # II=17280
 II=86400
 NN=(0 1 2 3)
 # DEVS=(OSM070 OSM300 OSM150 OSM200 OSM325)
-DEVS=(OSM_MAIN_DATA OSM_MAIN_IDX OSM_SLIM_DATA OSM_SLIM_IDX)
-DIRS=(main_data main_idx slim_data slim_idx)
+DEVS=(OSM_main_data OSM_main_index OSM_slim_data OSM_slim_index)
+DIRS=(main_data main_index slim_data slim_index)
 
 rm -f du.txt
 touch du.txt
@@ -16,7 +16,7 @@ touch du.txt
 rm -f df.txt
 touch df.txt
 
-printf "time," >> du.txt 
+printf "time," >> du.txt
 for N in ${NN[@]}; do
     printf %s "${DIRS[$N]}," >> du.txt
 done
