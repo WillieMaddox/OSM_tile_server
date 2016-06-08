@@ -15,6 +15,7 @@
       <w>featureeditor</w>
       <w>geofabrik</w>
       <w>geomcollection</w>
+      <w>holecoords</w>
       <w>hstore</w>
       <w>interactor</w>
       <w>keyup</w>
