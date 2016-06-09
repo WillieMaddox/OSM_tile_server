@@ -12,6 +12,7 @@
       <w>dragover</w>
       <w>dragstart</w>
       <w>drawend</w>
+      <w>drawstart</w>
       <w>featureeditor</w>
       <w>geofabrik</w>
       <w>geomcollection</w>
