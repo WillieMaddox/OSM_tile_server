@@ -16,6 +16,7 @@
       <w>featureeditor</w>
       <w>geofabrik</w>
       <w>geomcollection</w>
+      <w>heightinput</w>
       <w>holecoords</w>
       <w>hstore</w>
       <w>interactor</w>
@@ -31,6 +32,7 @@
       <w>psql</w>
       <w>renderd</w>
       <w>sudo</w>
+      <w>thicknessinput</w>
       <w>thunderforest</w>
       <w>unselectable</w>
       <w>wget</w>
