@@ -1,8 +1,20 @@
 <component name="ProjectDictionaryState">
   <dictionary name="maddoxw">
     <words>
+      <w>addaor</w>
+      <w>addbuilding</w>
+      <w>addherbage</w>
       <w>addlayer</w>
+      <w>addline</w>
+      <w>addpoint</w>
+      <w>addpolygon</w>
+      <w>addroad</w>
       <w>addvector</w>
+      <w>addwall</w>
+      <w>addwater</w>
+      <w>addwfs</w>
+      <w>addwms</w>
+      <w>couter</w>
       <w>dblclick</w>
       <w>debian</w>
       <w>deletelayer</w>
@@ -22,6 +34,7 @@
       <w>interactor</w>
       <w>keyup</w>
       <w>layercontainer</w>
+      <w>layertree</w>
       <w>mainwindow</w>
       <w>mousedown</w>
       <w>mouseleave</w>
