@@ -2234,12 +2234,34 @@ featureInteractor.prototype.deleteHole = function () {
 };
 featureInteractor.prototype.formatArea = function(polygon, sourceProj, sphere) {
 
+    var getGeodesicArea = function (poly) {
+        var area = 0;
+        var isExterior = true;
+        poly.getLinearRings().forEach( function (ring) {
+            if (isExterior) { // assume the first ring is the exterior ring.
+                area += Math.abs(sphere.geodesicArea(ring.getCoordinates()));
+                isExterior = false;
+            } else {
+                area -= Math.abs(sphere.geodesicArea(ring.getCoordinates()));
+            }
+        });
+        return area;
+    };
+
     var area;
     if (document.getElementById('geodesic').checked) {
         // var wgs84Sphere = new ol.Sphere(6378137);
         var geom = polygon.clone().transform(sourceProj, 'EPSG:4326');
-        var coordinates = geom.getLinearRing(0).getCoordinates();
-        area = Math.abs(sphere.geodesicArea(coordinates));
+        // var coordinates = geom.getLinearRing(0).getCoordinates();
+        // area = Math.abs(sphere.geodesicArea(coordinates));
+        area = 0;
+        if (geom.getType() === 'MultiPolygon') {
+            geom.getPolygons().forEach(function (poly) {
+                area += getGeodesicArea(poly);
+            });
+        } else {
+            area = getGeodesicArea(geom);
+        }
     } else {
         area = polygon.getArea();
     }
