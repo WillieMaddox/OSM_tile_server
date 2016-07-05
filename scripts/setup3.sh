@@ -10,8 +10,8 @@ PLANETDIR="/vagrant/data/planet/"
 
 #####################################################
 URLBASE="http://download.geofabrik.de/north-america/us/"
-# PBFFILE="alabama-latest.osm.pbf"
-PBFFILE="rhode-island-latest.osm.pbf"
+PBFFILE="alabama-latest.osm.pbf"
+# PBFFILE="rhode-island-latest.osm.pbf"
 ## Date:   0330_2016_0036
 ## Nodes:         6849k
 ## Ways:           432k
@@ -60,7 +60,8 @@ fi
 # --tablespace-main-data main_data --tablespace-main-index main_idx
 # --tablespace-slim-data slim_data --tablespace-slim-index slim_idx
 echo `date`; time -p osm2pgsql -c -d gis -U vagrant --number-processes 12 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx --tablespace-slim-data slim_data --tablespace-slim-index slim_idx /vagrant/data/planet/planet-latest.osm.pbf
-
+echo `date`; time -p osm2pgsql -c -d gis -U maddoxw --number-processes 12 --slim -C 30000 -k --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_index --tablespace-slim-data slim_data --tablespace-slim-index slim_index /media/Borg_LS/terrain/osm/pbf/planet-latest.osm.pbf
+echo `date`; time -p osm2pgsql -c -j -G -d gis -U maddoxw --number-processes 8 --slim -C 36000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_index --tablespace-slim-data slim_data --tablespace-slim-index slim_index /media/Borg_LS/terrain/osm/pbf/north-america-latest.osm.pbf
 sudo -u ${GISUSER} renderd -f -c /usr/local/etc/renderd.conf
 sudo -u vagrant renderd -f -c /usr/local/etc/renderd.conf
 # Then restart apache in another terminal.
