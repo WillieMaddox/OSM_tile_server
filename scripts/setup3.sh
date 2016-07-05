@@ -52,6 +52,8 @@ if [[ ! -f ${PLANETFILE} ]]; then
     wget ${URLFILE} -O ${PLANETFILE}
 fi
 
+find . -name "*.md5" -exec md5sum -c {} \;
+
 # MEM=`grep 'MemTotal' /proc/meminfo | sed -e 's/MemTotal://' -e 's/ kB//'`
 # CACHE=`echo "$MEM * 0.8" | bc`
 # CACHE 8 bytes * number of nodes / efficiency, where efficiency is 50% for small extracts, 80% for full planet
