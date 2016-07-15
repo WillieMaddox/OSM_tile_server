@@ -11,7 +11,7 @@ DB=gis
 # if [[ ! -f ${PG_CONF}.orig ]]; then
 #     cp ${PG_CONF} ${PG_CONF}.orig
 # fi
-# cp ${SRCDIR}/data/mods/postgresql${PG_VERSION}.conf ${PG_CONF}
+# cp ${SRCDIR}/data/mods/postgresql${PG_VERSION}-before.conf ${PG_CONF}
 
 cat << EOF | su - postgres -c psql
 DROP DATABASE IF EXISTS ${DB};
