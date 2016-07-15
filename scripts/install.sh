@@ -68,7 +68,7 @@ PG_DIR="/var/lib/postgresql/${PG_VERSION}/main"
 # Tuning postgresql
 
 cp ${PG_CONF} ${PG_CONF}.orig
-cp /vagrant/data/mods/postgresql${PG_VERSION}.conf ${PG_CONF}
+cp /vagrant/data/mods/postgresql${PG_VERSION}-before.conf ${PG_CONF}
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" "${PG_CONF}"
 sed -i "s/md5/trust/" "${PG_HBA}"
 sed -i "s/peer/trust/" "${PG_HBA}"
