@@ -70,6 +70,27 @@ sudo -u vagrant renderd -f -c /usr/local/etc/renderd.conf
 sudo service apache2 restart
 
 # Run after osm2pgsql
+PG_VERSION=`pg_config --version | sed 's/[^0-9.]*\([0-9][.][0-9]\)[.][0-9]*/\1/'`
+PG_SOURCE_DIR="/home/${GISUSER}/git/OSM_tile_server/data/mods"
+PG_SOURCE_CONF="postgresql${PG_VERSION}-after.conf"
+PG_TARGET_DIR="/etc/postgresql/${PG_VERSION}/main"
+PG_TARGET_CONF="postgresql.conf"
+PG_CONF=${PG_TARGET_DIR}/${PG_TARGET_CONF}
+
+# copy new config
+if [[ ! -f ${PG_TARGET_DIR}/${PG_SOURCE_CONF} ]]; then
+    cp ${PG_SOURCE_DIR}/${PG_SOURCE_CONF} ${PG_TARGET_DIR}/${PG_SOURCE_CONF}
+    chown postgres:postgres ${PG_TARGET_DIR}/${PG_SOURCE_CONF}
+    chmod 644 ${PG_TARGET_DIR}/${PG_SOURCE_CONF}
+fi
+# remove link to config if it exists.
+rm -f ${PG_CONF}
+# link config
+ln -s ${PG_TARGET_DIR}/${PG_SOURCE_CONF} ${PG_CONF}
+chown postgres:postgres ${PG_CONF}
+chmod 644 ${PG_CONF}
+
+
 cat << EOF | su - postgres -c ${DB}
 ALTER TABLE public.planet_osm_ways SET (autovacuum_vacuum_scale_factor = 0.0);
 ALTER TABLE public.planet_osm_ways SET (autovacuum_vacuum_threshold = 5000);
