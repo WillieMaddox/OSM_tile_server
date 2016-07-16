@@ -1,6 +1,5 @@
 
 DROP TABLE IF EXISTS buildings;
-
 CREATE TABLE buildings TABLESPACE main_data AS SELECT
 	osm_id,
 	name,
@@ -13,11 +12,12 @@ CREATE TABLE buildings TABLESPACE main_data AS SELECT
 	END AS height
 	FROM planet_osm_polygon WHERE building IS NOT NULL;
 
+--Feature id (gml:id) is based on primary key column
+--http://download.deegree.org/documentation/3.3.16/html/featurestores.html
 ALTER TABLE buildings ADD PRIMARY KEY (osm_id);
 CREATE INDEX ON buildings USING GIST (way) TABLESPACE main_index;
 
-DROP VIEW IF EXISTS buildings0 CASCADE;
-
+--DROP VIEW IF EXISTS buildings0 CASCADE;
 --DROP TABLE IF EXISTS buildings;
 --
 --CREATE TABLE buildings (
