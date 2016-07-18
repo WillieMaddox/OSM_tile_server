@@ -115,3 +115,5 @@ GROUP BY key
 ORDER BY count DESC, key
 LIMIT 20;
 
+-- ROADS
+highway
