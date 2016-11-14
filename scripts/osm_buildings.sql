@@ -4,6 +4,7 @@ CREATE TABLE buildings AS SELECT
 	name,
 	way,
 	building,
+	--Record the height iff the height is already in numeric form.
 	CASE
 	WHEN tags->'height' = '.' THEN
 	    NULL

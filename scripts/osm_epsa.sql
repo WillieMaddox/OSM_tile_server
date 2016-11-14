@@ -1,3 +1,4 @@
+#!/usr/bin/psql
 
 SET enable_seqscan TO off;
 
