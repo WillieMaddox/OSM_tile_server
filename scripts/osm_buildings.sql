@@ -17,6 +17,8 @@ CREATE TABLE buildings AS SELECT
 
 --Feature id (gml:id) is based on primary key column
 --http://download.deegree.org/documentation/3.3.16/html/featurestores.html
-ALTER TABLE buildings ADD PRIMARY KEY (osm_id);
+--ALTER TABLE buildings ADD PRIMARY KEY (osm_id);
+--http://gis.stackexchange.com/questions/157541/postgresql-trouble-editing-points-lines-polygons-in-qgis
+ALTER TABLE buildings ADD gid serial PRIMARY KEY;
 CREATE INDEX ON buildings USING GIST (way);
 
