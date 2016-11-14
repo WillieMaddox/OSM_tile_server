@@ -117,3 +117,5 @@ fi
 sudo chown -R www-data:www-data /var/log/tiles
 PBF_CRTIME=`pbf_crtime ${PLANETFILE}`
 sudo -u www-data /usr/bin/openstreetmap-tiles-update-expire ${PBF_CRTIME}
+
+sudo -u www-data /usr/bin/openstreetmap-tiles-update-expire -k -G -d gis --flat-nodes /var/lib/mod_tile/planet.cache --number-processes 8
