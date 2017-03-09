@@ -29,10 +29,10 @@ function building_interesting(kv)
 end
 
 function building_transform(kv)
-    kv["name_en"] = name_lang(kv, "en")
-    kv["name_de"] = name_lang(kv, "de")
-    kv["name_fr"] = name_lang(kv, "fr")
-    return kv
+    local cols = {}
+    cols.name_en = name_lang(kv, "en")
+    cols.height = height(kv["height"])
+    return cols
 end
 
 -- If we weren't generating multilingual names we could omit building_transform
@@ -59,8 +59,6 @@ function bus_transform(kv)
     kv["bench"] = yesno(kv["bench"])
     kv["wheelchair"] = yesno(kv["wheelchair"])
     kv["name_en"] = name_lang(kv, "en")
-    kv["name_de"] = name_lang(kv, "de")
-    kv["name_fr"] = name_lang(kv, "fr")
     return kv
 end
 
@@ -102,8 +100,6 @@ function highway_transform(kv)
     -- This is a lua way of doing an inline conditional
     kv["road_type"] = highway_lookup[kv["highway"]] and "road" or "link"
     kv["name_en"] = name_lang(kv, "en")
-    kv["name_de"] = name_lang(kv, "de")
-    kv["name_fr"] = name_lang(kv, "fr")
     return kv
 end
 
@@ -155,6 +151,29 @@ function name_lang(kv, lang, name_tag)
         -- name tag.
         return name_trans .. "(" .. name .. ")"
     end
+end
+
+-- This function tries to convert the height tag into a metric number
+-- Mainly used for building heights.
+--[[
+function parse_height(kv)
+    height = nil
+    if tags["building:height"] and tags["building:height"]' = '.' then
+	    return height
+    end
+	if tags->'height' ~ E'^([0-9.]+)$' then
+	    height = tonumber(tags["building:height"])
+        return height
+    end
+
+	ELSE
+	    NULL
+	END AS height
+end
+--]]
+
+function height (h)
+    return h ~= nil and string.find(h, "^%d+%.?%d*$") and tonumber(h) < 31000 and tostring(tonumber(h)) or nil
 end
 
 -- This function gets rid of an object we don't care about

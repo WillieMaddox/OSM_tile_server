@@ -64,6 +64,9 @@ find . -name "*.md5" -exec md5sum -c {} \;
 echo `date`; time -p osm2pgsql -c -d gis -U vagrant --number-processes 12 --slim -C 30000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_idx --tablespace-slim-data slim_data --tablespace-slim-index slim_idx /vagrant/data/planet/planet-latest.osm.pbf
 echo `date`; time -p osm2pgsql -c -d gis -U maddoxw --number-processes 12 --slim -C 30000 -k --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_index --tablespace-slim-data slim_data --tablespace-slim-index slim_index /media/Borg_LS/terrain/osm/pbf/planet-latest.osm.pbf
 echo `date`; time -p osm2pgsql -c -k -G -d gis -U maddoxw --number-processes 8 --slim -C 36000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_index --tablespace-slim-data slim_data --tablespace-slim-index slim_index /media/Borg_LS/terrain/osm/pbf/north-america-latest.osm.pbf
+# using lua script
+echo `date`; time -p osm2pgsql -c -G -d gis3 -p colorado3_osm -O multi -S multi.style.json -U maddoxw --number-processes 8 --slim -C 36000 --flat-nodes /var/lib/mod_tile/planet3.cache /media/Borg_LS/terrain/osm/pbf/colorado-latest.osm.pbf
+
 sudo -u ${GISUSER} renderd -f -c /usr/local/etc/renderd.conf
 sudo -u vagrant renderd -f -c /usr/local/etc/renderd.conf
 # Then restart apache in another terminal.

@@ -2,7 +2,18 @@
 -- FROM planet_osm_polygon WHERE tags ? 'height'
 -- GROUP BY tags->'height' ORDER BY tags->'height' DESC;
 
--- SELECT count(*) FROM buildings where height IS NULL;
+select count(*) from planet_osm_polygon where defined(tags, 'height');
+
+select count(*) from planet_osm_polygon where defined(tags, 'HEIGHT');
+select count(*) from planet_osm_polygon where defined(tags, 'height:estimate');
+select count(*) from planet_osm_polygon where defined(tags, 'height:feet');
+select count(*) from planet_osm_polygon where defined(tags, 'height:meters');
+select count(*) from planet_osm_polygon where defined(tags, 'building:height');
+select count(*) from planet_osm_polygon where defined(tags, 'building:height:avg');
+select count(*) from planet_osm_polygon where (tags -> 'landcover') = 'trees';
+
+
+-- SELECT count(*) FROM buildings where "height" IS NULL;
 -- SELECT count(*) FROM buildings where height IS NOT NULL;
 -- SELECT count(*) FROM buildings where height ~ E'[0-9.]';
 -- SELECT count(*) FROM buildings where height ~ E'^([0-9.]+)$';

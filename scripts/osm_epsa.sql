@@ -11,7 +11,6 @@ SET enable_seqscan TO off;
 -- FROM planet_osm_polygon WHERE tags ? 'height'
 -- GROUP BY tags->'height' ORDER BY tags->'height' DESC;
 
-SELECT count(*) FROM planet_osm_polygon
 SELECT count(*) FROM planet_osm_polygon where 'landuse' IS NOT NULL;
 SELECT count(*) FROM planet_osm_polygon where 'natural' IS NOT NULL;
 SELECT count(*) FROM planet_osm_polygon where landuse IS NOT NULL;
@@ -62,7 +61,7 @@ FROM planet_osm_polygon p WHERE
 	waterway = 'riverbank' OR
 	p.natural = 'water' OR
 	p.natural = 'wetland' OR
-    p.natural = 'bay' OR
+  p.natural = 'bay' OR
 	p.natural = 'pond' OR
 	p.natural = 'waterway';
 
