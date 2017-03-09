@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 GISUSER=vagrant
-GISPASS=vagrant
 DB=gis
 
 
@@ -72,11 +71,14 @@ sudo -u vagrant renderd -f -c /usr/local/etc/renderd.conf
 # Then restart apache in another terminal.
 sudo service apache2 restart
 
-# Run after osm2pgsql
+#######################
+# Run after osm2pgsql #
+#######################
+
 PG_VERSION=`pg_config --version | sed 's/[^0-9.]*\([0-9][.][0-9]\)[.][0-9]*/\1/'`
-PG_SOURCE_DIR="/home/${GISUSER}/git/OSM_tile_server/data/mods"
-PG_SOURCE_CONF="postgresql${PG_VERSION}-after.conf"
-PG_TARGET_DIR="/etc/postgresql/${PG_VERSION}/main"
+PG_SOURCE_DIR="/home/"${GISUSER}"/git/OSM_tile_server/data/mods"
+PG_SOURCE_CONF="postgresql"${PG_VERSION}"-after.conf"
+PG_TARGET_DIR="/etc/postgresql/"${PG_VERSION}"/main"
 PG_TARGET_CONF="postgresql.conf"
 PG_CONF=${PG_TARGET_DIR}/${PG_TARGET_CONF}
 
@@ -92,6 +94,7 @@ rm -f ${PG_CONF}
 ln -s ${PG_TARGET_DIR}/${PG_SOURCE_CONF} ${PG_CONF}
 chown postgres:postgres ${PG_CONF}
 chmod 644 ${PG_CONF}
+service postgresql restart
 
 
 cat << EOF | su - postgres -c ${DB}
@@ -108,16 +111,17 @@ time -p dd if=bigfile of=/dev/null bs=8k
 
 dstat -tmsclgd -D sda1,sdb6,sdb8,sdc1,sdc2,sdc3,sdc4 --output dstat.txt 5
 
-# sudo install-postgis-osm-user.sh gis www-data
 # sudo ln -s /home/vagrant/src/mod_tile/munin/* /etc/munin/plugins/
 # sudo chmod a+x /home/vagrant/src/mod_tile/munin/*
 # sudo munin-node-configure --shell | sudo sh
 
 sudo /usr/bin/install-postgis-osm-user.sh gis www-data
+
 if [[ ! -d /var/log/tiles ]]; then
     sudo mkdir /var/log/tiles
 fi
 sudo chown -R www-data:www-data /var/log/tiles
+
 PBF_CRTIME=`pbf_crtime ${PLANETFILE}`
 sudo -u www-data /usr/bin/openstreetmap-tiles-update-expire ${PBF_CRTIME}
 

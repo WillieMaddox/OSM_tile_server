@@ -61,9 +61,9 @@ apt-get install -qy postgresql postgresql-contrib postgis python-psycopg2
 # echo 'kernel.shmmax=17179869184' | cat - /etc/sysctl.conf > /tmp/out && mv /tmp/out /etc/sysctl.conf
 
 PG_VERSION=`pg_config --version | sed 's/[^0-9.]*\([0-9][.][0-9]\)[.][0-9]/\1/'`
-PG_CONF="/etc/postgresql/${PG_VERSION}/main/postgresql.conf"
-PG_HBA="/etc/postgresql/${PG_VERSION}/main/pg_hba.conf"
-PG_DIR="/var/lib/postgresql/${PG_VERSION}/main"
+PG_CONF=/etc/postgresql/${PG_VERSION}/main/postgresql.conf
+PG_HBA=/etc/postgresql/${PG_VERSION}/main/pg_hba.conf
+PG_DIR=/var/lib/postgresql/${PG_VERSION}/main
 
 # Tuning postgresql
 

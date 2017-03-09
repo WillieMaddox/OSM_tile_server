@@ -22,20 +22,18 @@ cmake ..
 make -j 4
 sudo make install
 
-sudo mkdir -p /tmp/psql-tablespace
-sudo chown postgres:postgres /tmp/psql-tablespace
-psql -c "CREATE TABLESPACE tablespacetest LOCATION '/tmp/psql-tablespace'" postgres
+sudo cp install-postgis-osm-user.sh /usr/bin/
+sudo cp install-postgis-osm-db.sh /usr/bin/
 
 cd tests
 make -j 4
 cd ../
-# make test
-cd ../
-
+sudo mkdir -p /tmp/psql-tablespace
+sudo chown postgres:postgres /tmp/psql-tablespace
+psql -c "CREATE TABLESPACE tablespacetest LOCATION '/tmp/psql-tablespace'" postgres
+make test
 psql -c "DROP TABLESPACE tablespacetest" postgres
-
-sudo cp install-postgis-osm-user.sh /usr/bin/
-sudo cp install-postgis-osm-db.sh /usr/bin/
+sudo rm -rf /tmp/psql-tablespace
 
 
 cd ~/src

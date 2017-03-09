@@ -4,9 +4,9 @@ GISUSER=maddoxw
 DB=gis
 
 PG_VERSION=`pg_config --version | sed 's/[^0-9.]*\([0-9][.][0-9]\)[.][0-9]*/\1/'`
-PG_SOURCE_DIR="/home/${GISUSER}/git/OSM_tile_server/data/mods"
-PG_SOURCE_CONF="postgresql${PG_VERSION}-before.conf"
-PG_TARGET_DIR="/etc/postgresql/${PG_VERSION}/main"
+PG_SOURCE_DIR="/home/"${GISUSER}"/git/OSM_tile_server/data/mods"
+PG_SOURCE_CONF="postgresql"${PG_VERSION}"-before.conf"
+PG_TARGET_DIR="/etc/postgresql/"${PG_VERSION}"/main"
 PG_TARGET_CONF="postgresql.conf"
 PG_CONF=${PG_TARGET_DIR}/${PG_TARGET_CONF}
 
@@ -59,9 +59,10 @@ EOF
 #     chmod 700 /var/lib/postgresql/${PG_VERSION}/main/pg_xlog
 # fi
 
+TBLSPCROOT=/media/SSD5/OSM
+
 TBLSPC=main_data
-SDBTBLSPCPATH=/media/OSM_${TBLSPC}
-TBLSPCPATH=${SDBTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${TBLSPCROOT}/${TBLSPC}
 mkdir -p ${TBLSPCPATH}
 chown postgres:postgres ${TBLSPCPATH}
 cat << EOF | su - postgres -c psql
@@ -70,8 +71,7 @@ CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
 TBLSPC=main_index
-SDBTBLSPCPATH=/media/OSM_${TBLSPC}
-TBLSPCPATH=${SDBTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${TBLSPCROOT}/${TBLSPC}
 mkdir -p ${TBLSPCPATH}
 chown postgres:postgres ${TBLSPCPATH}
 cat << EOF | su - postgres -c psql
@@ -80,8 +80,7 @@ CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
 TBLSPC=slim_data
-SDBTBLSPCPATH=/media/OSM_${TBLSPC}
-TBLSPCPATH=${SDBTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${TBLSPCROOT}/${TBLSPC}
 mkdir -p ${TBLSPCPATH}
 chown postgres:postgres ${TBLSPCPATH}
 cat << EOF | su - postgres -c psql
@@ -90,8 +89,7 @@ CREATE TABLESPACE ${TBLSPC} OWNER ${GISUSER} LOCATION '${TBLSPCPATH}';
 EOF
 
 TBLSPC=slim_index
-SDBTBLSPCPATH=/media/OSM_${TBLSPC}
-TBLSPCPATH=${SDBTBLSPCPATH}/${TBLSPC}
+TBLSPCPATH=${TBLSPCROOT}/${TBLSPC}
 mkdir -p ${TBLSPCPATH}
 chown postgres:postgres ${TBLSPCPATH}
 cat << EOF | su - postgres -c psql
