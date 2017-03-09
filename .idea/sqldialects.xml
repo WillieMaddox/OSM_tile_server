@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/scripts/feature_types.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/osm_building_height_study.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/osm_buildings.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/scripts/osm_buildings_work.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/osm_epsa.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/scripts/osm_herbage.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/scripts/osm_herbage_work.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/scripts/osm_roads.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/scripts/osm_roads_work.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/scripts/osm_water.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/scripts/osm_water_work.sql" dialect="PostgreSQL" />
   </component>
 </project>
