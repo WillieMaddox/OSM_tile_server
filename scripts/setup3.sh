@@ -65,6 +65,7 @@ echo `date`; time -p osm2pgsql -c -d gis -U maddoxw --number-processes 12 --slim
 echo `date`; time -p osm2pgsql -c -k -G -d gis -U maddoxw --number-processes 8 --slim -C 36000 --flat-nodes /var/lib/mod_tile/planet.cache --tablespace-main-data main_data --tablespace-main-index main_index --tablespace-slim-data slim_data --tablespace-slim-index slim_index /media/Borg_LS/terrain/osm/pbf/north-america-latest.osm.pbf
 # using lua script
 echo `date`; time -p osm2pgsql -c -G -d gis3 -p colorado3_osm -O multi -S multi.style.json -U maddoxw --number-processes 8 --slim -C 36000 --flat-nodes /var/lib/mod_tile/planet3.cache /media/Borg_LS/terrain/osm/pbf/colorado-latest.osm.pbf
+echo `date`; time -p osm2pgsql -c -G -d gis -p alabama0_osm -O multi -S multi.style.json -U maddoxw --number-processes 8 --slim -C 36000 --flat-nodes /var/lib/mod_tile/alabama0.cache /media/RED6/DATA/osm/pbf/alabama-latest.osm.pbf
 
 sudo -u ${GISUSER} renderd -f -c /usr/local/etc/renderd.conf
 sudo -u vagrant renderd -f -c /usr/local/etc/renderd.conf
@@ -76,10 +77,10 @@ sudo service apache2 restart
 #######################
 
 PG_VERSION=`pg_config --version | sed 's/[^0-9.]*\([0-9][.][0-9]\)[.][0-9]*/\1/'`
-PG_SOURCE_DIR="/home/"${GISUSER}"/git/OSM_tile_server/data/mods"
-PG_SOURCE_CONF="postgresql"${PG_VERSION}"-after.conf"
-PG_TARGET_DIR="/etc/postgresql/"${PG_VERSION}"/main"
-PG_TARGET_CONF="postgresql.conf"
+PG_SOURCE_DIR=/home/${GISUSER}/git/OSM_tile_server/data/mods
+PG_SOURCE_CONF=postgresql${PG_VERSION}-after.conf
+PG_TARGET_DIR=/etc/postgresql/${PG_VERSION}/main
+PG_TARGET_CONF=postgresql.conf
 PG_CONF=${PG_TARGET_DIR}/${PG_TARGET_CONF}
 
 # copy new config
