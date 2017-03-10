@@ -4,9 +4,9 @@ GISUSER=maddoxw
 DB=gis
 
 PG_VERSION=`pg_config --version | sed 's/[^0-9.]*\([0-9][.][0-9]\)[.][0-9]*/\1/'`
-PG_SOURCE_DIR="/home/"${GISUSER}"/git/OSM_tile_server/data/mods"
-PG_SOURCE_CONF="postgresql"${PG_VERSION}"-before.conf"
-PG_TARGET_DIR="/etc/postgresql/"${PG_VERSION}"/main"
+PG_SOURCE_DIR=/home/${GISUSER}/git/OSM_tile_server/data/mods
+PG_SOURCE_CONF=postgresql${PG_VERSION}-before.conf
+PG_TARGET_DIR=/etc/postgresql/${PG_VERSION}/main
 PG_TARGET_CONF="postgresql.conf"
 PG_CONF=${PG_TARGET_DIR}/${PG_TARGET_CONF}
 
